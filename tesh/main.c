@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#define TAILLE_TAMPON_LECTURE 64
-
+#include "lecture.h"
+#define TAILLE_TAMPON_DECOUPE 64
 
 int main(int argc, char **argv){
 
@@ -14,33 +14,13 @@ int main(int argc, char **argv){
         //Lecture
         char* commande = lecture();
 
+        printf("%s\n",commande);
+        return 0;
         //Analyse
-
+        //char** commande_decoupe = analyse(commande)
 
         //Exécution
 
-    }
-
-}
-
-char* lecture() {
-
-    int taille_actuelle = TAILLE_TAMPON_LECTURE;
-    int position = 0;
-
-    char* commande;
-    commande = (char*) malloc(sizeof(char)*taille_actuelle);
-    
-    if (commande == NULL) {
-        print("Erreur lors de l'allocation du tampon de lecture\n");
-        return NULL;
-    }
-
-    char c = getchar();
-    while (c != EOF) {
-        if (position < taille_actuelle) {
-            commande[position] = c;
-        }
     }
 
 }

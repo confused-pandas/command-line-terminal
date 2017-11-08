@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "lecture.h"
-#define TAILLE_TAMPON_DECOUPE 64
+#include "execution.h"
+#define TAILLE_TAMPON_LECTURE 64
+
 
 int main(int argc, char **argv){
 
@@ -20,7 +22,7 @@ int main(int argc, char **argv){
         //char** commande_decoupe = analyse(commande)
 
         //Exécution
+        int execute = execution();
 
     }
-
 }

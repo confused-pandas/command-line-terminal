@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include "lecture.h"
 #include "execution.h"
+#include "analyse.h"
+
 #define TAILLE_TAMPON_LECTURE 64
 
 
@@ -16,13 +18,11 @@ int main(int argc, char **argv){
         //Lecture
         char* commande = lecture();
 
-        printf("%s\n",commande);
-        return 0;
         //Analyse
-        //char** commande_decoupe = analyse(commande)
+        char** parsed = analyse(commande);
 
         //Exécution
-        int execute = execution();
+        execution(parsed);
 
     }
 }

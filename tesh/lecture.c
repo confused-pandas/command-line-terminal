@@ -11,7 +11,7 @@ char* lecture() {
     char* commande = (char*) malloc(sizeof(char)*taille_actuelle); 
     if (commande == NULL) {
         printf("Erreur lors de l'allocation initiale du tampon de lecture\n");
-        return NULL;
+        exit(105); /* No buffer space available */
     }
     
     do {
@@ -43,7 +43,7 @@ char* lecture() {
             if (commande == NULL) {
 
                 printf("Erreur lors de la réallocation du tampon de lecture\n");
-                return NULL;
+                exit(105); /* No buffer space available */
 
             }
 

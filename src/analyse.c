@@ -48,10 +48,6 @@ char** analyse(char* commande) {
 					dernier_mot = 1;
 					fini=1;
 					break;
-				case '|'
-					mot[position_mot] = '\0'
-					fini = 1;
-					break;
 				default:
 					mot[position_mot] = c;
 					break;

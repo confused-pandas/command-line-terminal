@@ -91,7 +91,11 @@ int execution_simple(char** parsed) {
     }
     if (strcmp(parsed[0],"cd")==0){
         if (parsed[1] != NULL) {
-            chdir(parsed[1]);
+            if (strcmp(parsed[1], "~") == 0) {
+                chdir(getenv("HOME"));
+            } else {
+                chdir(parsed[1]);
+            }
         } else {
             chdir(getenv("HOME"));
         }

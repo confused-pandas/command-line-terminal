@@ -90,7 +90,15 @@ int execution_simple(char** parsed) {
         return 0;
     }
     if (strcmp(parsed[0],"cd")==0){
-        chdir(parsed[1]);  
+        if (parsed[1] != NULL) {
+            if (strcmp(parsed[1], "~") == 0) {
+                chdir(getenv("HOME"));
+            } else {
+                chdir(parsed[1]);
+            }
+        } else {
+            chdir(getenv("HOME"));
+        }
     }
     else{
         pid = fork();

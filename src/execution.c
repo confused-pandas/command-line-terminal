@@ -9,86 +9,107 @@
 
 #define TAILLE_TAMPON_EXECUTION 32
 
-int execution(char** parsed) {
+char* true = "true";
+commande_simple true_simple = {&(true)};
+commande_redirigee true_redirige = {true_simple,RED_RIEN,NULL};
+liste_pipe true_liste_pipe = {true_redirige,NULL};
 
-    int position = 0;
+char* false = "false";
+commande_simple false_simple = {&(false)};
+commande_redirigee false_redirige = {false_simple,RED_RIEN,NULL};
+liste_pipe false_liste_pipe = {false_redirige,NULL};
 
-    while (parsed[position] != NULL) {
-        int taille_commande = TAILLE_TAMPON_EXECUTION;
-        int position_commande = 0;
-        char** commande_simple = (char**) malloc(sizeof(char*)*taille_commande); 
-        if (commande_simple == NULL) {
-            printf("Erreur lors de l'allocation initiale du tampon d'éxecution\n");
-            exit(105); /* No buffer space available */
-        }
+int execution(commande* c) {
 
-        int fini=0;
+    int resultat;
 
-        while(!fini) {
-            switch (read_token(parsed[position])) {
-                case SEMICOLUMN:
-                    commande_simple[position_commande] = NULL;
-                    execution_simple(commande_simple);
-                    fini = 1;
-                    break;
-                case DEFAULT:
-                    commande_simple[position_commande] = parsed[position];
-                    break;
-                case END:
-                    commande_simple[position_commande] = NULL;
-                    return execution_simple(commande_simple);
+    switch (c->sep) {
+        case SEMICOLUMN:
+            resultat = execution_and_or(&(c->l));
+            if(c->suivante == NULL) {
+                return resultat;
+            } else {
+                return execution(c->suivante);
             }
-
-            position++;
-            position_commande++;
-
-            if (position_commande >= taille_commande) {
-                taille_commande += TAILLE_TAMPON_EXECUTION;
-                commande_simple = realloc(commande_simple,taille_commande);
-                if (commande_simple == NULL) {
-                    printf("Erreur lors de la réallocation du tampon d'éxecution\n");
-                    exit(105); /* No buffer space available */
-                }
-
+            break;
+        case AMPERSAND:
+            //TODO : a implementer
+            break;
+        case SEP_RIEN:
+            resultat = execution_and_or(&(c->l));
+            if (c->suivante != NULL) {
+                printf("Erreur : commande non nulle après séparateur de terminaison");
+                return -1;
+            } else {
+                return resultat;
             }
-        }
+            break;
     }
-    return 0;
 }
 
 
-delimiteur read_token(char* token) {
-    if (token == NULL) {
-        return END;
-    }else if (strcmp(token, ";") == 0){
-        return SEMICOLUMN;
-    }else if (strcmp(token, "||") == 0){
-        return OR;
-    }else if (strcmp(token, "&&") == 0){
-        return AND;
-    }else if (strcmp(token, "|") == 0){
-        return PIPE;
-    }else if (strcmp(token, "<") == 0){
-        return REDIR_INPUT;
-    }else if (strcmp(token, "<<") == 0){
-        return HEREDOC;
-    }else if (strcmp(token, ">") == 0){
-        return REDIR_OUTPUT;
-    }else if (strcmp(token, ">>") == 0){
-        return APPEND;
+int execution_and_or(liste_and_or* l) {
+
+    int resultat;
+
+    switch (l->op) {
+        case OR: /* || */
+            resultat = execution_pipe(&(l->liste));
+            if (resultat == 0) {
+                // ça a marché, pas besoin de faire la commande suivante
+                // on remplace la commande suivante par true et on execute la suite
+                l->suivante->liste = true_liste_pipe;
+            }
+            return execution_pipe(l->suivante);
+            break;
+        case AND: /* && */
+            resultat = execution_pipe(&(l->liste));
+            if (resultat != 0) {
+                // la première n'a pas marché, pas besoin de faire la suivante pour savoir que le AND
+                // sera faux, on remplace la suivante par false et on continue
+                l->suivante->liste = false_liste_pipe;
+            }
+            return execution_pipe(l->suivante);
+            break;
+        case OP_RIEN: /* si c'est fini */
+            resultat = execution_pipe(&(l->liste));
+            if (l->suivante != NULL) {
+                printf("Erreur : commande non nulle après séparateur de terminaison");
+                return -1;
+            } else {
+                return resultat;
+            }
+            break;
+    }
+
+}
+
+int execution_pipe(liste_pipe* l) {
+
+    if (l->suivante == NULL) {
+        return execution_redirigee(&(l->commande))
     } else {
-        return DEFAULT;
+        
     }
-}
 
+}
 
 int execution_simple(char** parsed) {
+
+    /*
+    Renvoie 0 si tout s'est bien passé,
+    n'importe quel autre nombre sinon
+    */
+
     pid_t pid;
-    int status;
-    int errexec;
+    int status;;
+
+    //Si la commande est vide, on ne fait rien
     if (parsed == NULL) {
         return 0;
     }
+
+    //On traite le cd séparément
     if (strcmp(parsed[0],"cd")==0){
         if (parsed[1] != NULL) {
             if (strcmp(parsed[1], "~") == 0) {
@@ -100,21 +121,41 @@ int execution_simple(char** parsed) {
             chdir(getenv("HOME"));
         }
     }
-    else{
+    //Pour toutes les autres commandes
+    else {
+
         pid = fork();
+        
+        // Erreur lors du fork
         if (pid < 0) {
+
             fprintf(stderr, "Erreur dans %d\n", getpid());
             perror("Erreur lors du fork");
             exit(1);
-        }else if (pid == 0) {
-            errexec = execvp(parsed[0], parsed);
-            if (errexec == -1) {
-                perror("Erreur lors de l'exécution");
-            }
-            exit(EXIT_FAILURE);
-        }else{ 
-            wait(NULL);
+
+        } else if (pid == 0) {
+
+            //On lance la commande
+            execvp(parsed[0], parsed);
+
+            /*
+            Si jamais on arrive à cette ligne
+            cela signifie que la commande n'est pas parvenue
+            à se lancer, on peut renvoyer -1
+            */
+            return -1;
+
+        }
+
+        //Dans le père 
+        if ( waitpid(pid, &status, 0) == -1 ) {
+            perror("Erreur lors du waitpid");
+            return -1;
+        }
+
+        if ( WIFEXITED(status) ) {
+            return WEXITSTATUS(status);
         }
     }
-    return 1;
+    return -1;
 }

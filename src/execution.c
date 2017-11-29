@@ -74,7 +74,7 @@ int execution_and_or(liste_and_or* l) {
         case OP_RIEN: /* si c'est fini */
             resultat = execution_pipe(&(l->liste));
             if (l->suivante != NULL) {
-                printf("Erreur : commande non nulle après séparateur de terminaison");
+                printf("Erreur : commande non nulle après séparateur de terminaison\n");
                 return -1;
             } else {
                 return resultat;
@@ -94,7 +94,33 @@ int execution_pipe(liste_pipe* l) {
 
 }
 
-int execution_simple(char** parsed) {
+int execution_redirigee(commande_redirigee* c) {
+
+    if (c->fichier != NULL) {
+        switch(c->red) {
+            case REDIR_INPUT:    /* < */
+                FILE* fd = open(c->fichier, O_RDONLY, 0);
+                FILE* fcommande = popen(c->commande,"w");
+
+                int[2] pipe_fds = {fd,fcommande};
+                pipe(pipe_fds);
+
+                break;
+            case REDIR_OUTPUT:   /* > */
+
+            case APPEND:         /* >> */
+
+            case RED_RIEN:       /* si pas de redirection */
+                printf("Erreur : commande non nulle après redirecteur nul\n");
+                return -1;
+        }
+    } else {
+        return execution_simple(&(c->commande));
+    }
+
+}
+
+int execution_simple(commande_simple* c) {
 
     /*
     Renvoie 0 si tout s'est bien passé,
@@ -105,17 +131,17 @@ int execution_simple(char** parsed) {
     int status;;
 
     //Si la commande est vide, on ne fait rien
-    if (parsed == NULL) {
+    if (c->commande == NULL) {
         return 0;
     }
 
     //On traite le cd séparément
-    if (strcmp(parsed[0],"cd")==0){
-        if (parsed[1] != NULL) {
-            if (strcmp(parsed[1], "~") == 0) {
+    if (strcmp(c->commande[0],"cd")==0){
+        if (c->commande[1] != NULL) {
+            if (strcmp(c->commande[1], "~") == 0) {
                 chdir(getenv("HOME"));
             } else {
-                chdir(parsed[1]);
+                chdir(c->commande[1]);
             }
         } else {
             chdir(getenv("HOME"));
@@ -136,7 +162,7 @@ int execution_simple(char** parsed) {
         } else if (pid == 0) {
 
             //On lance la commande
-            execvp(parsed[0], parsed);
+            execvp(c->commande[0], c->commande);
 
             /*
             Si jamais on arrive à cette ligne

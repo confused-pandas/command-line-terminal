@@ -19,6 +19,8 @@ commande_simple false_simple = {&(false)};
 commande_redirigee false_redirige = {false_simple,RED_RIEN,NULL};
 liste_pipe false_liste_pipe = {false_redirige,NULL};
 
+char* chemin_fifo = "/tmp/teshFifo";
+
 int execution(commande* c) {
 
     int resultat;
@@ -84,12 +86,35 @@ int execution_and_or(liste_and_or* l) {
 
 }
 
-int execution_pipe(liste_pipe* l) {
+int execution_pipe(liste_pipe* l, int niveau) {
 
+    /* Bon j'ai pas envie de faire des pipe n'importe comment
+    Je vais utiliser un tube nommé je pense ça sera plus propre*/
+
+    // Si c'est la toute première commande il faut creer le fifo
+    if (niveau == 0) {
+        if (mkfifo(chemin_fifo,0666) != 0) {
+            printf("Erreur lors de la création du fifo\n");
+            return -1;
+        }
+    }
+
+    FILE* fifo = fopen(chemin_fifo,"r+");
+
+    // Si il n'y a plus de commandes après
     if (l->suivante == NULL) {
-        return execution_redirigee(&(l->commande))
+
+        dup2(fifo,0);
+        dup2(stdout,1);
+        return execution_redirigee(&(l->commande));
+
     } else {
-        
+
+        dup2(fifo,0);
+        dup2(fifo,1);
+        execution_redirigee(&(l->commande));
+        execution_pipe(l->suivante, niveau+1);
+
     }
 
 }
@@ -99,11 +124,8 @@ int execution_redirigee(commande_redirigee* c) {
     if (c->fichier != NULL) {
         switch(c->red) {
             case REDIR_INPUT:    /* < */
-                FILE* fd = open(c->fichier, O_RDONLY, 0);
+                FILE* fd = fopen(c->fichier, "r");
                 FILE* fcommande = popen(c->commande,"w");
-
-                int[2] pipe_fds = {fd,fcommande};
-                pipe(pipe_fds);
 
                 break;
             case REDIR_OUTPUT:   /* > */

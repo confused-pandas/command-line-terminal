@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "execution.h"
+
 #define TAILLE_TAMPON_ANALYSE 128
 
-char** analyse(char* commande) {
+commande* analyse(char* commande) {
 
 	int taille_actuelle = TAILLE_TAMPON_ANALYSE;
 	int position = 0;

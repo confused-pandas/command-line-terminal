@@ -2,6 +2,13 @@
 #define EXECUTION_H
 
 typedef enum {
+	REDIRECTEUR,
+	OPERATEUR,
+	SEPARATEUR,
+	MOT,
+} tokens;
+
+typedef enum {
 	REDIR_INPUT, 	/* < */
 	REDIR_OUTPUT, 	/* > */
 	APPEND, 		/* >> */

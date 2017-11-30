@@ -5,7 +5,7 @@
 
 #define TAILLE_TAMPON_ANALYSE 128
 
-commande* analyse(char* commande) {
+char** decoupage(char* ligne_lue) {
 
 	int taille_actuelle = TAILLE_TAMPON_ANALYSE;
 	int position = 0;
@@ -120,4 +120,20 @@ commande* analyse(char* commande) {
 		}
 
 	} while (1);
+
 }
+
+commande* analyse(char** parsed) {
+
+	// Prend en entrée la commande découpée selon les espaces
+	// Renvoie une commande proprement analysée ou une erreur sinon
+
+	int indice_parsed = 0;
+
+	while (parsed[indice_parsed] != NULL) {
+
+		indice_parsed++;
+	}
+
+}
+

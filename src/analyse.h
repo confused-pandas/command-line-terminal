@@ -1,6 +1,8 @@
 #ifndef ANALYSE_H
 #define ANALYSE_H
 
-char** analyse(char* commande);
+char** découpage(char* ligne_lue);
+
+commande* analyse(char** parsed);
 
 #endif 

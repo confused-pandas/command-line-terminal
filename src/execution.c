@@ -190,6 +190,8 @@ int execution_simple(commande_simple* c) {
     }
 
     //On traite le cd séparément
+    // ATTENTION ET SI IL FAUT LIRE LES PARAMETRES DU CD SUR L'ENTREE STANDARD ?
+    // à faire pour plus tard ...
     if (strcmp(c->commande[0],"cd")==0){
         if (c->commande[1] != NULL) {
             if (strcmp(c->commande[1], "~") == 0) {

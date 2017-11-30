@@ -18,3 +18,6 @@ out :
 
 clean :
 	rm out/* -f
+
+add :
+	git add src/*

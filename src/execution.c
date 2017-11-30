@@ -104,25 +104,20 @@ int execution_pipe(liste_pipe* l, int niveau) {
 
     FILE* fifo_pipe = fopen(chemin_fifo_pipe,"r+");
 
-    // Si on est dans le fils
-    if (fork() != 0) {
+    // Si il n'y a plus de commandes après
+    if (l->suivante == NULL) {
 
+        dup2(fileno(fifo_pipe),0);
+        dup2(fileno(stdout),1);
+        return execution_redirigee(&(l->commande));
 
-        // Si il n'y a plus de commandes après
-        if (l->suivante == NULL) {
+    } else {
 
-            dup2(fileno(fifo_pipe),0);
-            dup2(fileno(stdout),1);
-            return execution_redirigee(&(l->commande));
+        dup2(fileno(fifo_pipe),0);
+        dup2(fileno(fifo_pipe),1);
+        execution_redirigee(&(l->commande));
+        execution_pipe(l->suivante, niveau+1);
 
-        } else {
-
-            dup2(fileno(fifo_pipe),0);
-            dup2(fileno(fifo_pipe),1);
-            execution_redirigee(&(l->commande));
-            execution_pipe(l->suivante, niveau+1);
-
-        }
     }
     return -1;
 }

@@ -28,8 +28,10 @@ int main(int argc, char* argv[]){
         exit(7);
     }
 
-    if (strcmp(argv[1],"-e") == 0) {
-        option_e = 1;
+    if (argv == 2) {    
+        if (strcmp(argv[1],"-e") == 0) {
+            option_e = 1;
+        }
     }
 
     while (!fini) {

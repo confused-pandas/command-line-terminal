@@ -21,7 +21,7 @@ int yyerror(char *s);
 %%
 
 Commande:
-	  Liste_And_Or
+	  Liste_And_Or '\n'
 	| Liste_And_Or SEMICOLUMN Commande
 	| Liste_And_Or AMPERSAND Commande {}
 	;
@@ -46,7 +46,7 @@ Commande_Redirigee:
 
 Commande_Simple:
 	  /* Vide */
-	| MOT Commande_Simple
+	| MOT Commande_Simple { push($1) }
 	;
 
 %%

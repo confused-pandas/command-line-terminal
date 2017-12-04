@@ -1,0 +1,1 @@
+echo < wesh.txt | grep a >> yes.yes && le fait est que ceci nest pas une commande & echo a ; hihi || | haha;

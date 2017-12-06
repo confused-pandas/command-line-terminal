@@ -1,8 +1,8 @@
-tesh : out/execution.o out/main.o out/parser.o out/lexer.o
-	gcc out/execution.o out/main.o out/parser.o out/lexer.o -o tesh
+tesh : out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o
+	gcc out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall
 
 out/main.o : out src/main.c
-	gcc -c src/main.c -o out/main.o
+	gcc -c src/main.c -o out/main.o -Wall
 
 out/execution.o : out src/execution.c
 	gcc -c src/execution.c -o out/execution.o -Wall
@@ -13,11 +13,14 @@ out/parser.o : out bison
 out/lexer.o : out flex
 	gcc -c src/lexer.c -o out/lexer.o -Wall
 
+out/commande.o : out
+	gcc -c src/commande.c -o out/commande.o -Wall
+
 bison :
-	bison -d -o src/parser.c src/parser.y
+	bison -d --no-lines -o src/parser.c src/parser.y -Wall
 
 flex : bison
-	flex -o src/lexer.c src/lexer.l
+	flex --debug --noline -o src/lexer.c src/lexer.l
 
 out :
 	mkdir out

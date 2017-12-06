@@ -1,10 +1,10 @@
 %{
-#include <stdio.h>
-#include "commande.h"
-commande* commande_lue;
+	#include "commande.h"
+	#include <stdio.h>
+	commande* commande_lue;
 
-extern int yylex();
-void yyerror(const char* s) { printf("ERREUR : %s\n",s); }
+	extern int yylex();
+	void yyerror(const char* s) { printf("ERREUR : %s\n",s); }
 %}
 
 %union {
@@ -15,7 +15,7 @@ void yyerror(const char* s) { printf("ERREUR : %s\n",s); }
 	liste_and_or* lst_and_or;
 	commande* commande_complete;
 	int vide;
-}
+};
 
 %token <string> T_MOT
 %token <vide> T_SEMICOLON T_AMPERSAND

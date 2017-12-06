@@ -62,16 +62,16 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "src/parser.y" /* yacc.c:339  */
 
-#include <stdio.h>
-#include "commande.h"
-commande* commande_lue;
 
-extern int yylex();
-void yyerror(const char* s) { printf("ERREUR : %s\n",s); }
+	#include "commande.h"
+	#include <stdio.h>
+	commande* commande_lue;
 
-#line 75 "src/parser.c" /* yacc.c:339  */
+	extern int yylex();
+	void yyerror(const char* s) { printf("ERREUR : %s\n",s); }
+
+
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -123,7 +123,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 10 "src/parser.y" /* yacc.c:355  */
+
 
 	char* string;
 	commande_simple* com_simple;
@@ -133,7 +133,7 @@ union YYSTYPE
 	commande* commande_complete;
 	int vide;
 
-#line 137 "src/parser.c" /* yacc.c:355  */
+
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -150,7 +150,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 154 "src/parser.c" /* yacc.c:358  */
+
 
 #ifdef short
 # undef short
@@ -1227,97 +1227,97 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 37 "src/parser.y" /* yacc.c:1646  */
+
     { commande_lue = (yyvsp[0].commande_complete); }
-#line 1233 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 3:
-#line 41 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[0].lst_and_or); (yyval.commande_complete)->sep = SEP_RIEN; (yyval.commande_complete)->suivante = NULL; }
-#line 1239 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 4:
-#line 42 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = SEMICOLUMN; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
-#line 1245 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 5:
-#line 43 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = AMPERSAND; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
-#line 1251 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 6:
-#line 47 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = OP_RIEN; (yyval.lst_and_or)->suivante = NULL; }
-#line 1257 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 7:
-#line 48 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[-2].lst_pipe); (yyval.lst_and_or)->op = AND; (yyval.lst_and_or)->suivante = (yyvsp[0].lst_and_or); }
-#line 1263 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 8:
-#line 49 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[-2].lst_pipe); (yyval.lst_and_or)->op = OR; (yyval.lst_and_or)->suivante = (yyvsp[0].lst_and_or); }
-#line 1269 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 9:
-#line 53 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[0].com_redir); (yyval.lst_pipe)->suivante = NULL; }
-#line 1275 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 10:
-#line 54 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[-2].com_redir); (yyval.lst_pipe)->suivante = (yyvsp[0].lst_pipe); }
-#line 1281 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 11:
-#line 58 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[0].com_simple); (yyval.com_redir)->red = RED_RIEN; (yyval.com_redir)->fichier = NULL; }
-#line 1287 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 12:
-#line 59 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_INPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
-#line 1293 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 13:
-#line 60 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_OUTPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
-#line 1299 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 14:
-#line 61 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = APPEND; (yyval.com_redir)->fichier = (yyvsp[0].string); }
-#line 1305 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 15:
-#line 65 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.com_simple) = new_commande_simple(); cs_append((yyval.com_simple),(yyvsp[0].string)); }
-#line 1311 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
   case 16:
-#line 66 "src/parser.y" /* yacc.c:1646  */
+
     { (yyval.com_simple) = new_commande_simple(); cs_append((yyval.com_simple),(yyvsp[-1].string)); cs_fusion((yyval.com_simple),(yyvsp[0].com_simple)); }
-#line 1317 "src/parser.c" /* yacc.c:1646  */
+
     break;
 
 
-#line 1321 "src/parser.c" /* yacc.c:1646  */
+
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1545,5 +1545,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 69 "src/parser.y" /* yacc.c:1906  */
+
 

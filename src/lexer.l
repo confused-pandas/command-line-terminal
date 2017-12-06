@@ -3,11 +3,15 @@
 	/* Le code C ici présent se copié tel quel */
 	#include <stdio.h>
 	#include <string.h>
-	#include "parser.h"
+
+	/* ATTENTION A BIEN IMPORTER LES STRUCTURES AVANT LE PARSER */
 	#include "commande.h"
+	#include "parser.h"
 	#define SAVE_TEXT yylval.string = strdup(yytext)
 
 %}
+	//Je fais de la magie noire je comprends rien laissez moi tranquille
+%option noyywrap
 
 %%
 	/* PARITE REGLES */
@@ -26,9 +30,11 @@
 
 %%
 	/* PARTIE ? */
+/*
 int main(int argc, char** argv) {
 
 	// On lit l'entrée
 	yylex();
 
 }
+*/

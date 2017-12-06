@@ -4,7 +4,7 @@
 	commande* commande_lue;
 
 	extern int yylex();
-	void yyerror(const char* s) { printf("ERREUR : %s\n",s); }
+	void yyerror(const char* s) { printf("Erreur à l'analyse : %s\n",s); }
 %}
 
 %union {
@@ -17,11 +17,15 @@
 	int vide;
 };
 
+	/* Pour des messages d'erreur plus complets */
+%define parse.error verbose
+
 %token <string> T_MOT
 %token <vide> T_SEMICOLON T_AMPERSAND
 %token <vide> T_AND T_OR
 %token <vide> T_PIPE
 %token <vide> T_REDIR_INPUT T_REDIR_OUTPUT T_APPEND
+%token <vide> T_END
 
 %type <com_simple> CS
 %type <com_redir> CR
@@ -34,7 +38,7 @@
 
 %%
 
-CP	: C	{ commande_lue = $1; }
+CP	: C T_END { commande_lue = $1; }
 	;
 
 C 	:

@@ -16,8 +16,9 @@
 %%
 	/* PARITE REGLES */
 
-[ \t\n]				;
-[a-zA-Z0-9\_\-\.]+	{ SAVE_TEXT; return T_MOT; }
+[ \t<<EOF>>]		;
+[\n]				{ return T_END; }
+[a-zA-Z0-9\_\-\./]+	{ SAVE_TEXT; return T_MOT; }
 ">"					{ return T_REDIR_INPUT; }
 "<"					{ return T_REDIR_OUTPUT; }
 ">>"				{ return T_APPEND; }

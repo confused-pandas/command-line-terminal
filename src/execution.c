@@ -16,6 +16,7 @@ char* chemin_fifo_red = "/tmp/teshFifoRed";
 
 int execution(commande* c) {
 
+    printf("Je lance l'execution de la commande\n");
     int resultat;
 
     switch (c->sep) {

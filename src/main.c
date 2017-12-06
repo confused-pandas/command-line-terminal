@@ -13,6 +13,8 @@ int main(int argc, char **argv){
 	char pwd[1024];
     int fini = 0;
 
+    int erreur_analyse;
+
     while (!fini) {
 
     	//Affiche le prompt
@@ -25,7 +27,9 @@ int main(int argc, char **argv){
         yyparse();
 
         //Exécution
-        execution(commande_lue);
+        if (!erreur_analyse) {
+            execution(commande_lue);
+        }
 
     }
 }

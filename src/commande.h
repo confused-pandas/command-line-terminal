@@ -14,6 +14,7 @@ commande_redirigee* new_commande_redir();
 liste_pipe* new_pipe();
 liste_and_or* new_and_or();
 commande* new_commande();
+int taille(char** tab);
 
 typedef enum {
 	REDIR_INPUT, 	/* < */

@@ -53,7 +53,8 @@ extern int yydebug;
     T_PIPE = 263,
     T_REDIR_INPUT = 264,
     T_REDIR_OUTPUT = 265,
-    T_APPEND = 266
+    T_APPEND = 266,
+    T_END = 267
   };
 #endif
 

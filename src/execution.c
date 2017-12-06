@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #include "execution.h"
+#include "commande.h"
 
 #define TAILLE_TAMPON_EXECUTION 32
 
@@ -19,7 +20,7 @@ int execution(commande* c) {
 
     switch (c->sep) {
         case SEMICOLUMN:
-            resultat = execution_and_or(&(c->l));
+            resultat = execution_and_or(c->l);
             if(c->suivante == NULL) {
                 return resultat;
             } else {
@@ -30,7 +31,7 @@ int execution(commande* c) {
             //TODO : a implementer
             break;
         case SEP_RIEN:
-            resultat = execution_and_or(&(c->l));
+            resultat = execution_and_or(c->l);
             if (c->suivante != NULL) {
                 printf("Erreur : commande non nulle après séparateur de terminaison");
                 return -1;
@@ -47,37 +48,37 @@ int execution_and_or(liste_and_or* l) {
 
     char* true = "true";
     commande_simple true_simple = {&(true)};
-    commande_redirigee true_redirige = {true_simple,RED_RIEN,NULL};
-    liste_pipe true_liste_pipe = {true_redirige,NULL};
+    commande_redirigee true_redirige = {&(true_simple),RED_RIEN,NULL};
+    liste_pipe true_liste_pipe = {&(true_redirige),NULL};
 
     char* false = "false";
     commande_simple false_simple = {&(false)};
-    commande_redirigee false_redirige = {false_simple,RED_RIEN,NULL};
-    liste_pipe false_liste_pipe = {false_redirige,NULL};
+    commande_redirigee false_redirige = {&(false_simple),RED_RIEN,NULL};
+    liste_pipe false_liste_pipe = {&(false_redirige),NULL};
 
     int resultat;
 
     switch (l->op) {
         case OR: /* || */
-            resultat = execution_pipe(&(l->liste),0);
+            resultat = execution_pipe(l->liste,0);
             if (resultat == 0) {
                 // ça a marché, pas besoin de faire la commande suivante
                 // on remplace la commande suivante par true et on execute la suite
-                l->suivante->liste = true_liste_pipe;
+                *(l->suivante->liste) = true_liste_pipe;
             }
-            return execution_pipe(&(l->suivante->liste),0);
+            return execution_pipe(l->suivante->liste,0);
             break;
         case AND: /* && */
-            resultat = execution_pipe(&(l->liste),0);
+            resultat = execution_pipe(l->liste,0);
             if (resultat != 0) {
                 // la première n'a pas marché, pas besoin de faire la suivante pour savoir que le AND
                 // sera faux, on remplace la suivante par false et on continue
-                l->suivante->liste = false_liste_pipe;
+                *(l->suivante->liste) = false_liste_pipe;
             }
-            return execution_pipe(&(l->suivante->liste),0);
+            return execution_pipe(l->suivante->liste,0);
             break;
         case OP_RIEN: /* si c'est fini */
-            resultat = execution_pipe(&(l->liste),0);
+            resultat = execution_pipe(l->liste,0);
             if (l->suivante != NULL) {
                 printf("Erreur : commande non nulle après séparateur de terminaison\n");
                 return -1;
@@ -109,13 +110,13 @@ int execution_pipe(liste_pipe* l, int niveau) {
 
         dup2(fileno(fifo_pipe),0);
         dup2(fileno(stdout),1);
-        return execution_redirigee(&(l->commande));
+        return execution_redirigee(l->commande);
 
     } else {
 
         dup2(fileno(fifo_pipe),0);
         dup2(fileno(fifo_pipe),1);
-        execution_redirigee(&(l->commande));
+        execution_redirigee(l->commande);
         execution_pipe(l->suivante, niveau+1);
 
     }
@@ -146,21 +147,21 @@ int execution_redirigee(commande_redirigee* c) {
                     write(fileno(fifo_red), buffer, 1);
                 }
                 dup2(fileno(fifo_red),0);
-                return execution_simple(&(c->commande));
+                return execution_simple(c->commande);
                 break;
                 }
             case REDIR_OUTPUT:   /* > */
                 {
                 FILE* fd = fopen(c->fichier, "w");
                 dup2(fileno(fd),1);
-                return execution_simple(&(c->commande));
+                return execution_simple(c->commande);
                 break;
                 }
             case APPEND:         /* >> */
                 {
                 FILE* fd = fopen(c->fichier, "a");
                 dup2(fileno(fd),1);
-                return execution_simple(&(c->commande));
+                return execution_simple(c->commande);
                 break;
                 }
             case RED_RIEN:       /* si pas de redirection */
@@ -168,7 +169,7 @@ int execution_redirigee(commande_redirigee* c) {
                 return -1;
         }
     } else {
-        return execution_simple(&(c->commande));
+        return execution_simple(c->commande);
     }
 
     return -1;

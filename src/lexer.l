@@ -3,8 +3,9 @@
 	/* Le code C ici présent se copié tel quel */
 	#include <stdio.h>
 	#include <string.h>
-	#define SAVE_TEXT yylval.str = strdup(yytext)
-	#define TOKEN(t) (yylval.token = t)
+	#include "parser.h"
+	#include "commande.h"
+	#define SAVE_TEXT yylval.string = strdup(yytext)
 
 %}
 

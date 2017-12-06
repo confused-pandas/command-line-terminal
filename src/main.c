@@ -2,13 +2,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "lecture.h"
 #include "execution.h"
-#include "analyse.h"
 
 extern commande* commande_lue;
-extern int yyparse();
-
+extern int yyparse(void);
 
 int main(int argc, char **argv){
 

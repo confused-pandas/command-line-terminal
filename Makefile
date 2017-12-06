@@ -1,17 +1,23 @@
-tesh : out/lecture.o out/analyse.o out/execution.o out/main.o
-	gcc out/lecture.o out/analyse.o out/execution.o out/main.o -o tesh
+tesh : out/execution.o out/main.o out/parser.o out/lexer.o
+	gcc out/execution.o out/main.o out/parser.o out/lexer.o -o tesh
 
 out/main.o : out src/main.c
 	gcc -c src/main.c -o out/main.o
 
-out/lecture.o : out src/lecture.c
-	gcc -c src/lecture.c -o out/lecture.o -Wall
-
-out/analyse.o : out src/analyse.c
-	gcc -c src/analyse.c -o out/analyse.o -Wall
-
 out/execution.o : out src/execution.c
 	gcc -c src/execution.c -o out/execution.o -Wall
+
+out/parser.o : out bison
+	gcc -c src/parser.c -o out/parser.o -Wall
+
+out/lexer.o : out flex
+	gcc -c src/lexer.c -o out/lexer.o -Wall
+
+bison :
+	bison -d -o src/parser.c src/parser.y
+
+flex : bison
+	flex -o src/lexer.c src/lexer.l
 
 out :
 	mkdir out

@@ -1,10 +1,10 @@
 %{
-	#include "commande.h"
-	commande* commande_lue;
+#include <stdio.h>
+#include "commande.h"
+commande* commande_lue;
 
-	extern int yylex();
-	void yyerror(const char* s) { printf("ERREUR : %s\n",s); }
-
+extern int yylex();
+void yyerror(const char* s) { printf("ERREUR : %s\n",s); }
 %}
 
 %union {
@@ -13,8 +13,8 @@
 	commande_redirigee* com_redir;
 	liste_pipe* lst_pipe;
 	liste_and_or* lst_and_or;
-	commande* commande_complète;
-	int vide
+	commande* commande_complete;
+	int vide;
 }
 
 %token <string> T_MOT
@@ -27,20 +27,20 @@
 %type <com_redir> CR
 %type <lst_pipe> P
 %type <lst_and_or> AO
-%type <commande_complète> C
+%type <commande_complete> C
 %type <vide> CP
 
 %start CP
 
 %%
 
-CP	: C	{ commande_lue = $1 }
+CP	: C	{ commande_lue = $1; }
 	;
 
 C 	:
-	  AO				{ $$ = new_commande(); $$->liste_and_or = $1; $$->sep = SEP_RIEN; $$->suivante = NULL; }
-	| AO T_SEMICOLON C	{ $$ = new_commande(); $$->liste_and_or = $1; $$->sep = SEMICOLUMN; $$->suivante = $3; }
-	| AO T_AMPERSAND C 	{ $$ = new_commande(); $$->liste_and_or = $1; $$->sep = AMPERSAND; $$->suivante = $3; }
+	  AO				{ $$ = new_commande(); $$->l = $1; $$->sep = SEP_RIEN; $$->suivante = NULL; }
+	| AO T_SEMICOLON C	{ $$ = new_commande(); $$->l = $1; $$->sep = SEMICOLUMN; $$->suivante = $3; }
+	| AO T_AMPERSAND C 	{ $$ = new_commande(); $$->l = $1; $$->sep = AMPERSAND; $$->suivante = $3; }
 	;
 
 AO 	: 

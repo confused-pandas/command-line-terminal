@@ -1,6 +1,6 @@
-#line 2 "lexer.c"
+#line 2 "src/lexer.c"
 
-#line 4 "lexer.c"
+#line 4 "src/lexer.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -468,16 +468,17 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "lexer.l"
+#line 1 "src/lexer.l"
 /* PARTIE DEFINITIONS */
-#line 3 "lexer.l"
+#line 3 "src/lexer.l"
 	/* Le code C ici présent se copié tel quel */
 	#include <stdio.h>
 	#include <string.h>
-	#define SAVE_TEXT yylval.str = strdup(yytext)
-	#define TOKEN(t) (yylval.token = t)
+	#include "parser.h"
+	#include "commande.h"
+	#define SAVE_TEXT yylval.string = strdup(yytext)
 
-#line 481 "lexer.c"
+#line 482 "src/lexer.c"
 
 #define INITIAL 0
 
@@ -695,11 +696,11 @@ YY_DECL
 		}
 
 	{
-#line 11 "lexer.l"
+#line 12 "src/lexer.l"
 
 	/* PARITE REGLES */
 
-#line 703 "lexer.c"
+#line 704 "src/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -759,65 +760,65 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 14 "lexer.l"
+#line 15 "src/lexer.l"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 15 "lexer.l"
+#line 16 "src/lexer.l"
 { SAVE_TEXT; return T_MOT; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 16 "lexer.l"
+#line 17 "src/lexer.l"
 { return T_REDIR_INPUT; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 17 "lexer.l"
+#line 18 "src/lexer.l"
 { return T_REDIR_OUTPUT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 18 "lexer.l"
+#line 19 "src/lexer.l"
 { return T_APPEND; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 19 "lexer.l"
+#line 20 "src/lexer.l"
 { return T_PIPE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 20 "lexer.l"
+#line 21 "src/lexer.l"
 { return T_AND; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 21 "lexer.l"
+#line 22 "src/lexer.l"
 { return T_OR; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 22 "lexer.l"
+#line 23 "src/lexer.l"
 { return T_SEMICOLON; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 23 "lexer.l"
+#line 24 "src/lexer.l"
 { return T_AMPERSAND; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 24 "lexer.l"
+#line 25 "src/lexer.l"
 { printf("!! Symbole inconnu : %s\n",yytext); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 26 "lexer.l"
+#line 27 "src/lexer.l"
 ECHO;
 	YY_BREAK
-#line 821 "lexer.c"
+#line 822 "src/lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1818,7 +1819,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 26 "lexer.l"
+#line 27 "src/lexer.l"
 
 
 	/* PARTIE ? */

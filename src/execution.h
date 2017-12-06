@@ -1,6 +1,8 @@
 #ifndef EXECUTION_H
 #define EXECUTION_H
 
+#include "commande.h"
+
 int execution(commande* c);
 int execution_and_or(liste_and_or* l);
 int execution_pipe(liste_pipe* l, int niveau);

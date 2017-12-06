@@ -22,7 +22,7 @@ void cs_fusion(commande_simple* debut, commande_simple* suite) {
 
 	int indice_sur_debut = taille_debut;
 	int indice_sur_suite = 0;
-	while(debut->commande[indice_sur_suite] != NULL) {
+	while(debut->commande[indice_sur_debut] != NULL) {
 		debut->commande[indice_sur_debut] = strdup(suite->commande[indice_sur_suite]);
 		indice_sur_debut++;
 		indice_sur_suite++;

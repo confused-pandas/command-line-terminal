@@ -53,8 +53,7 @@ extern int yydebug;
     T_PIPE = 263,
     T_REDIR_INPUT = 264,
     T_REDIR_OUTPUT = 265,
-    T_APPEND = 266,
-    T_END = 267
+    T_APPEND = 266
   };
 #endif
 
@@ -82,8 +81,7 @@ typedef union YYSTYPE YYSTYPE;
 #endif
 
 
-extern YYSTYPE yylval;
 
-int yyparse (void);
+int yyparse (void * scanner);
 
 #endif /* !YY_YY_SRC_PARSER_H_INCLUDED  */

@@ -1,4 +1,4 @@
-tesh : out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o
+tesh : out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o bison flex
 	gcc out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall -g -DDEBUG
 
 out/main.o : out src/main.c
@@ -16,11 +16,11 @@ out/lexer.o : out flex
 out/commande.o : out
 	gcc -c src/commande.c -o out/commande.o -Wall
 
-bison :
+bison : src/parser.y
 	bison -d --no-lines --verbose -o src/parser.c src/parser.y -Wall
 
-flex : bison
-	flex --debug --noline -o src/lexer.c src/lexer.l
+flex : bison src/lexer.l
+	flex --debug --header-file=src/lexer.h --noline -o src/lexer.c src/lexer.l
 
 out :
 	mkdir out

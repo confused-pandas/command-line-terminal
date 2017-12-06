@@ -11,8 +11,9 @@
 
 #define TAILLE_TAMPON_EXECUTION 32
 
-char* chemin_fifo_pipe = "/tmp/teshFifoPipe";
-char* chemin_fifo_red = "/tmp/teshFifoRed";
+char* chemin_fifo_pipe = "tmp/teshFifoPipe";
+char* chemin_fifo_red = "tmp/teshFifoRed";
+
 
 int execution(commande* c) {
 
@@ -98,8 +99,9 @@ int execution_pipe(liste_pipe* l, int niveau) {
 
     // Si c'est la toute première commande il faut creer le fifo
     if (niveau == 0) {
+        remove(chemin_fifo_pipe);
         if (mkfifo(chemin_fifo_pipe,0666) != 0) {
-            printf("Erreur lors de la création du fifo\n");
+            printf("Erreur lors de la création du fifo du pipe\n");
             return -1;
         }
     }
@@ -126,8 +128,9 @@ int execution_pipe(liste_pipe* l, int niveau) {
 
 int execution_redirigee(commande_redirigee* c) {
 
+    remove(chemin_fifo_red);
     if (mkfifo(chemin_fifo_red,0666) != 0) {
-        printf("Erreur lors de la création du fifo\n");
+        printf("Erreur lors de la création du fifo de commande redirigée\n");
         return -1;
     }
 

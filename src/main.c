@@ -25,7 +25,7 @@ int main(int argc, char* argv[]){
 
     int valeur_retour = 0;
 
-    if (argc > 2) {
+    if (argc > 3) {
         errno = 7;
         perror("Error ");
         exit(7);
@@ -37,9 +37,8 @@ int main(int argc, char* argv[]){
         }
         else if (strcmp(argv[1],"-r") == 0) {
             option_r = 1;
-            //readline
-        } // Mode non interactif 
-        else {
+        } 
+        else { // Mode non interactif 
             mode_non_interactif = 1;
             file = freopen(argv[1],"r",stdin);
             if ( file == NULL ) {
@@ -47,10 +46,29 @@ int main(int argc, char* argv[]){
                 return -1;
             }
         }
-
     }
 
-
+    if (argc == 3) {
+        if ((strcmp(argv[1],"-e") && strcmp(argv[2],"-r")) || (strcmp(argv[2],"-e") && strcmp(argv[1],"-r")))  {
+            option_e = 1;
+            option_r = 1;
+        } else if (strcmp(argv[2], "-e")){
+            mode_non_interactif = 1;
+            file = freopen(argv[1],"r",stdin);
+            if ( file == NULL ) {
+                perror("Error ");
+                return -1;
+            }
+        } else {
+            option_e = 1;
+            file = freopen(argv[1],"r",stdin);
+            if ( file == NULL ) {
+                perror("Error ");
+                return -1;
+            }
+        }
+    }
+        
 
     while (!fini) {
 
@@ -74,23 +92,23 @@ int main(int argc, char* argv[]){
 
             //Exécution
             valeur_retour = execution(parsed);
-            
         }
-
-        
 
         
 
         if (option_e == 1) {
             if (valeur_retour != 0) {
-                return 0;
-            }
-        }
-        if (mode_non_interactif == 1) {
-            if (feof(file)) {
+                printf("%d",valeur_retour);
                 return 0;
             }
         }
 
+        if (mode_non_interactif == 1 && feof(file)) {
+            return 0;
+        } else if (mode_non_interactif == 1 && option_e == 1) {
+            if (valeur_retour != 0){
+                return 0;
+            }
+        }
     }
 }

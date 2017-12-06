@@ -19,6 +19,9 @@ int main(int argc, char* argv[]){
 
     int option_e = 0;
     int option_r = 0;
+    int mode_non_interactif = 0;
+
+    FILE* file;
 
     int valeur_retour = 0;
 
@@ -32,29 +35,59 @@ int main(int argc, char* argv[]){
         if (strcmp(argv[1],"-e") == 0) {
             option_e = 1;
         }
+        else if (strcmp(argv[1],"-r") == 0) {
+            option_r = 1;
+            //readline
+        } // Mode non interactif 
+        else {
+            mode_non_interactif = 1;
+            file = freopen(argv[1],"r",stdin);
+            if ( file == NULL ) {
+                perror("Error ");
+                return -1;
+            }
+        }
+
     }
+
+
 
     while (!fini) {
 
-    	//Affiche le prompt
-    	gethostname(hostname, 128);
-    	hostname[127] = '\0';
-    	getcwd(pwd, 1024);
-    	pwd[1023] = '\0';
-    	printf("%s@%s:%s$ ",getenv("USER"),hostname,pwd);
-
+    	//Affiche le prompt si on est en mode interactif
+        if (!mode_non_interactif) {
+            gethostname(hostname, 128);
+            hostname[127] = '\0';
+            getcwd(pwd, 1024);
+            pwd[1023] = '\0';
+            printf("%s@%s:%s$ ",getenv("USER"),hostname,pwd);
+        }
+    	
 
         //Lecture
         char* commande = lecture();
 
-        //Analyse
-        char** parsed = analyse(commande);
+        if (commande != NULL && commande[0] != '\0') {
 
-        //Exécution
-        valeur_retour = execution(parsed);
+            //Analyse
+            char** parsed = analyse(commande);
+
+            //Exécution
+            valeur_retour = execution(parsed);
+            
+        }
+
+        
+
+        
 
         if (option_e == 1) {
             if (valeur_retour != 0) {
+                return 0;
+            }
+        }
+        if (mode_non_interactif == 1) {
+            if (feof(file)) {
                 return 0;
             }
         }

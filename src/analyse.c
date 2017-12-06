@@ -5,6 +5,7 @@
 
 char** analyse(char* commande) {
 
+
 	int taille_actuelle = TAILLE_TAMPON_ANALYSE;
 	int position = 0;
 	int position_commande = 0;

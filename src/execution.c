@@ -11,6 +11,7 @@
 
 int execution(char** parsed) {
 
+
     int position = 0;
 
     while (parsed[position] != NULL) {
@@ -86,9 +87,6 @@ int execution_simple(char** parsed) {
     pid_t pid;
     int status;
     int errexec;
-    if (parsed == NULL) {
-        return 0;
-    }
     if (strcmp(parsed[0],"cd")==0){
         if (parsed[1] != NULL) {
             if (strcmp(parsed[1], "~") == 0) {

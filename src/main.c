@@ -6,7 +6,8 @@
 #include "execution.h"
 #include "analyse.h"
 
-#define TAILLE_TAMPON_LECTURE 64
+extern NBlock* programBlock;
+extern int yyparse();
 
 
 int main(int argc, char **argv){

@@ -53,4 +53,12 @@ typedef struct commande{
 	struct commande* suivante;
 } commande;
 
+void cs_append(commande_simple* commande_simple, char* mot);
+void cs_fusion(commande_simple* debut, commande_simple* suite);
+commande_simple* new_commande_simple();
+commande_redirigee* new_commande_redir();
+liste_pipe* new_pipe();
+liste_and_or* new_and_or();
+commande* new_commande();
+
 #endif

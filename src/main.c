@@ -6,7 +6,7 @@
 #include "execution.h"
 #include "analyse.h"
 
-extern NBlock* programBlock;
+extern commande* commande_lue;
 extern int yyparse();
 
 
@@ -24,14 +24,11 @@ int main(int argc, char **argv){
     	getcwd(pwd, 1024);
     	pwd[1023] = '\0';
     	printf("%s@%s:%s$ ",getenv("USER"),hostname,pwd);
-        //Lecture
-        char* commande = lecture();
-
-        //Analyse
-        char** parsed = analyse(commande);
+        //Lecture & Analyse
+        yyparse();
 
         //Exécution
-        execution(parsed);
+        execution(commande_lue);
 
     }
 }

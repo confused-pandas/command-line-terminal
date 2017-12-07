@@ -70,6 +70,7 @@
 
 	extern int yylex();
 	void yyerror(void* scanner, const char* s) { printf("Erreur à l'analyse : %s\n",s); }
+	int yywrap() {return 0;}
 
 
 
@@ -447,8 +448,8 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    43,    43,    47,    48,    49,    53,    54,    55,    59,
-      60,    64,    65,    66,    67,    71,    72
+       0,    44,    44,    48,    49,    50,    54,    55,    56,    60,
+      61,    65,    66,    67,    68,    72,    73
 };
 #endif
 

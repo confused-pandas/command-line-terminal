@@ -408,9 +408,6 @@ void yyfree (void * ,yyscan_t yyscanner );
 /* %% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here */
 /* Begin user sect3 */
 
-#define yywrap(yyscanner) (/*CONSTCOND*/1)
-#define YY_SKIP_YYWRAP
-
 #define FLEX_DEBUG
 
 typedef unsigned char YY_CHAR;
@@ -526,8 +523,8 @@ static yyconst flex_int16_t yy_chk[28] =
 
 static yyconst flex_int16_t yy_rule_linenum[13] =
     {   0,
-       20,   22,   23,   24,   25,   26,   27,   28,   29,   30,
-       31,   32
+       19,   21,   22,   23,   24,   25,   26,   27,   28,   29,
+       30,   31
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -980,12 +977,12 @@ YY_RULE_SETUP
 ;
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-{ yyterminate(); }
+{ return 0; }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-{ yyterminate(); }
+{ return 0; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP

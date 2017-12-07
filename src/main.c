@@ -17,6 +17,8 @@ int main(int argc, char **argv){
 
     int erreur_analyse;
 
+    void* scanner;
+
     while (!fini) {
 
         printf("Tour de boucle main\n");
@@ -26,13 +28,28 @@ int main(int argc, char **argv){
     	getcwd(pwd, 1024);
     	pwd[1023] = '\0';
     	printf("%s@%s:%s$ ",getenv("USER"),hostname,pwd);
+        fflush(stdout);
 
         //Lecture & Analyse
-        void* scanner;
+
+        printf("Initialisation du scanner : ");
+        fflush(stdout);
+        scanner = NULL;
         yylex_init(& scanner);
+        printf("OK\n");
+        fflush(stdout);
+
+        printf("Lancement de l'analyse : ");
+        fflush(stdout);
         erreur_analyse = yyparse(scanner);
-        yylex_destroy(scanner); 
-        printf("\nJ'ai fini l'analyse\n");
+        printf("OK\n");
+        fflush(stdout);
+
+        printf("Destruction du scanner : ");
+        fflush(stdout);
+        yylex_destroy(scanner);
+        printf("OK\n");
+        fflush(stdout);
 
         //Exécution
         if (!erreur_analyse) {

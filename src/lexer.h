@@ -280,9 +280,6 @@ void yyfree (void * ,yyscan_t yyscanner );
 /* %% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here */
 /* Begin user sect3 */
 
-#define yywrap(yyscanner) (/*CONSTCOND*/1)
-#define YY_SKIP_YYWRAP
-
 #define FLEX_DEBUG
 
 #define yytext_ptr yytext_r
@@ -466,6 +463,6 @@ extern int yylex \
 #undef YY_DECL
 #endif
 
-#line 470 "src/lexer.h"
+#line 467 "src/lexer.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

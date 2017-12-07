@@ -18,8 +18,8 @@
 	/* PARITE REGLES */
 
 [ \t]				;
-<<EOF>> 			{ yyterminate(); }
-[\n\0]				{ yyterminate(); }
+<<EOF>> 			{ return 0; }
+[\n\0]				{ return 0; }
 [a-zA-Z0-9\_\-\./]+	{ SAVE_TEXT; return T_MOT; }
 ">"					{ return T_REDIR_INPUT; }
 "<"					{ return T_REDIR_OUTPUT; }

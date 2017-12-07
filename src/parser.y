@@ -1,5 +1,6 @@
 %{
 	#include "commande.h"
+    #include "execution.h"
 	#include <stdio.h>
 	commande* commande_lue;
 
@@ -28,6 +29,7 @@
 %token <vide> T_AND T_OR
 %token <vide> T_PIPE
 %token <vide> T_REDIR_INPUT T_REDIR_OUTPUT T_APPEND
+%token <vide> T_NEWLINE
 
 %type <com_simple> CS
 %type <com_redir> CR
@@ -40,7 +42,9 @@
 
 %%
 
-CP	: C { commande_lue = $1; }
+CP	:
+	  C T_NEWLINE CP { commande_lue = $1; }
+	| C				 { commande_lue = $1; }
 	;
 
 C 	:

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "lecture.h"
 #include "execution.h"
 #include "parser.h"
 #include "lexer.h"
@@ -18,6 +19,7 @@ int main(int argc, char **argv){
     int erreur_analyse;
 
     void* scanner;
+    char* ligne_lue;
 
     while (!fini) {
 
@@ -31,25 +33,11 @@ int main(int argc, char **argv){
         fflush(stdout);
 
         //Lecture & Analyse
-
-        printf("Initialisation du scanner : ");
-        fflush(stdout);
-        scanner = NULL;
-        yylex_init(& scanner);
-        printf("OK\n");
-        fflush(stdout);
-
-        printf("Lancement de l'analyse : ");
-        fflush(stdout);
+        ligne_lue = lecture();
+        YY_BUFFER_STATE buf;
+        yylex_init(&scanner);
+        buf = yy_scan_string(ligne_lue, scanner);
         erreur_analyse = yyparse(scanner);
-        printf("OK\n");
-        fflush(stdout);
-
-        printf("Destruction du scanner : ");
-        fflush(stdout);
-        yylex_destroy(scanner);
-        printf("OK\n");
-        fflush(stdout);
 
         //Exécution
         if (!erreur_analyse) {
@@ -58,6 +46,9 @@ int main(int argc, char **argv){
             printf("Je n'execute pas la commande apparement il y a eu une erreur\n");
             printf("Code de retour de yyparse() : %d\n\n",erreur_analyse);
         }
+
+        yy_delete_buffer(buf, scanner);
+        yylex_destroy(scanner);
 
     }
 }

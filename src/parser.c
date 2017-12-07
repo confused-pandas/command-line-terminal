@@ -65,12 +65,12 @@
 
 
 	#include "commande.h"
+    #include "execution.h"
 	#include <stdio.h>
 	commande* commande_lue;
 
 	extern int yylex();
 	void yyerror(void* scanner, const char* s) { printf("Erreur à l'analyse : %s\n",s); }
-	int yywrap() {return 0;}
 
 
 
@@ -115,7 +115,8 @@ extern int yydebug;
     T_PIPE = 263,
     T_REDIR_INPUT = 264,
     T_REDIR_OUTPUT = 265,
-    T_APPEND = 266
+    T_APPEND = 266,
+    T_NEWLINE = 267
   };
 #endif
 
@@ -392,21 +393,21 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   18
+#define YYLAST   20
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  12
+#define YYNTOKENS  13
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  7
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  16
+#define YYNRULES  17
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  26
+#define YYNSTATES  28
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   266
+#define YYMAXUTOK   267
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -441,15 +442,15 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11
+       5,     6,     7,     8,     9,    10,    11,    12
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    44,    44,    48,    49,    50,    54,    55,    56,    60,
-      61,    65,    66,    67,    68,    72,    73
+       0,    46,    46,    47,    51,    52,    53,    57,    58,    59,
+      63,    64,    68,    69,    70,    71,    75,    76
 };
 #endif
 
@@ -460,7 +461,7 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "T_MOT", "T_SEMICOLON", "T_AMPERSAND",
   "T_AND", "T_OR", "T_PIPE", "T_REDIR_INPUT", "T_REDIR_OUTPUT", "T_APPEND",
-  "$accept", "CP", "C", "AO", "P", "CR", "CS", YY_NULLPTR
+  "T_NEWLINE", "$accept", "CP", "C", "AO", "P", "CR", "CS", YY_NULLPTR
 };
 #endif
 
@@ -470,7 +471,7 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266
+     265,   266,   267
 };
 # endif
 
@@ -488,9 +489,9 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       2,     2,    10,   -10,    -1,     0,     3,    -9,   -10,   -10,
-       2,     2,     2,     2,     2,     9,    12,    13,   -10,   -10,
-     -10,   -10,   -10,   -10,   -10,   -10
+       2,     2,    10,     1,    -1,     0,     6,    -9,   -10,   -10,
+       2,     2,     2,     2,     2,     2,    12,    13,    14,   -10,
+     -10,   -10,   -10,   -10,   -10,   -10,   -10,   -10
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -498,15 +499,15 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,    15,     0,     2,     3,     6,     9,    11,    16,     1,
-       0,     0,     0,     0,     0,     0,     0,     0,     4,     5,
-       7,     8,    10,    12,    13,    14
+       0,    16,     0,     3,     4,     7,    10,    12,    17,     1,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     2,
+       5,     6,     8,     9,    11,    13,    14,    15
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -10,   -10,    -2,     1,     4,   -10,    16
+     -10,     8,    -3,    -2,     4,   -10,    19
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -520,37 +521,39 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      15,    16,    17,    10,    11,     1,    12,    13,    18,    19,
-       9,    14,    23,    20,    21,    24,    25,     8,    22
+      16,    17,    18,    11,    12,     1,    13,    14,    20,    21,
+       9,    22,    23,    10,    15,    25,    26,    27,    19,    24,
+       8
 };
 
 static const yytype_uint8 yycheck[] =
 {
-       9,    10,    11,     4,     5,     3,     6,     7,    10,    11,
-       0,     8,     3,    12,    13,     3,     3,     1,    14
+       9,    10,    11,     4,     5,     3,     6,     7,    11,    12,
+       0,    13,    14,    12,     8,     3,     3,     3,    10,    15,
+       1
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,    13,    14,    15,    16,    17,    18,    18,     0,
-       4,     5,     6,     7,     8,     9,    10,    11,    14,    14,
-      15,    15,    16,     3,     3,     3
+       0,     3,    14,    15,    16,    17,    18,    19,    19,     0,
+      12,     4,     5,     6,     7,     8,     9,    10,    11,    14,
+      15,    15,    16,    16,    17,     3,     3,     3
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    12,    13,    14,    14,    14,    15,    15,    15,    16,
-      16,    17,    17,    17,    17,    18,    18
+       0,    13,    14,    14,    15,    15,    15,    16,    16,    16,
+      17,    17,    18,    18,    18,    18,    19,    19
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     1,     3,     3,     1,     3,     3,     1,
-       3,     1,     3,     3,     3,     1,     2
+       0,     2,     3,     1,     1,     3,     3,     1,     3,     3,
+       1,     3,     1,     3,     3,     3,     1,     2
 };
 
 
@@ -1234,89 +1237,95 @@ yyreduce:
     {
         case 2:
 
-    { commande_lue = (yyvsp[0].commande_complete); }
+    { commande_lue = (yyvsp[-2].commande_complete); }
 
     break;
 
   case 3:
 
-    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[0].lst_and_or); (yyval.commande_complete)->sep = SEP_RIEN; (yyval.commande_complete)->suivante = NULL; }
+    { commande_lue = (yyvsp[0].commande_complete); }
 
     break;
 
   case 4:
 
-    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = SEMICOLUMN; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[0].lst_and_or); (yyval.commande_complete)->sep = SEP_RIEN; (yyval.commande_complete)->suivante = NULL; }
 
     break;
 
   case 5:
 
-    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = AMPERSAND; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = SEMICOLUMN; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
 
     break;
 
   case 6:
 
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = OP_RIEN; (yyval.lst_and_or)->suivante = NULL; }
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = AMPERSAND; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
 
     break;
 
   case 7:
 
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[-2].lst_pipe); (yyval.lst_and_or)->op = AND; (yyval.lst_and_or)->suivante = (yyvsp[0].lst_and_or); }
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = OP_RIEN; (yyval.lst_and_or)->suivante = NULL; }
 
     break;
 
   case 8:
 
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[-2].lst_pipe); (yyval.lst_and_or)->op = OR; (yyval.lst_and_or)->suivante = (yyvsp[0].lst_and_or); }
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[-2].lst_pipe); (yyval.lst_and_or)->op = AND; (yyval.lst_and_or)->suivante = (yyvsp[0].lst_and_or); }
 
     break;
 
   case 9:
 
-    { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[0].com_redir); (yyval.lst_pipe)->suivante = NULL; }
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[-2].lst_pipe); (yyval.lst_and_or)->op = OR; (yyval.lst_and_or)->suivante = (yyvsp[0].lst_and_or); }
 
     break;
 
   case 10:
 
-    { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[-2].com_redir); (yyval.lst_pipe)->suivante = (yyvsp[0].lst_pipe); }
+    { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[0].com_redir); (yyval.lst_pipe)->suivante = NULL; }
 
     break;
 
   case 11:
 
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[0].com_simple); (yyval.com_redir)->red = RED_RIEN; (yyval.com_redir)->fichier = NULL; }
+    { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[-2].com_redir); (yyval.lst_pipe)->suivante = (yyvsp[0].lst_pipe); }
 
     break;
 
   case 12:
 
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_INPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[0].com_simple); (yyval.com_redir)->red = RED_RIEN; (yyval.com_redir)->fichier = NULL; }
 
     break;
 
   case 13:
 
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_OUTPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_INPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
 
     break;
 
   case 14:
 
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = APPEND; (yyval.com_redir)->fichier = (yyvsp[0].string); }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_OUTPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
 
     break;
 
   case 15:
 
-    { (yyval.com_simple) = new_commande_simple(); cs_append((yyval.com_simple),(yyvsp[0].string)); }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = APPEND; (yyval.com_redir)->fichier = (yyvsp[0].string); }
 
     break;
 
   case 16:
+
+    { (yyval.com_simple) = new_commande_simple(); cs_append((yyval.com_simple),(yyvsp[0].string)); }
+
+    break;
+
+  case 17:
 
     { (yyval.com_simple) = new_commande_simple(); cs_append((yyval.com_simple),(yyvsp[-1].string)); cs_fusion((yyval.com_simple),(yyvsp[0].com_simple)); }
 

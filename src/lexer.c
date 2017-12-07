@@ -408,6 +408,9 @@ void yyfree (void * ,yyscan_t yyscanner );
 /* %% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here */
 /* Begin user sect3 */
 
+#define yywrap(yyscanner) (/*CONSTCOND*/1)
+#define YY_SKIP_YYWRAP
+
 #define FLEX_DEBUG
 
 typedef unsigned char YY_CHAR;
@@ -452,10 +455,10 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[19] =
+static yyconst flex_int16_t yy_accept[18] =
     {   0,
         0,    0,   14,   12,    1,    2,   11,    3,   10,    5,
-        4,    7,    2,    8,    3,    6,    9,    0
+        4,    7,    8,    3,    6,    9,    0
     } ;
 
 static yyconst YY_CHAR yy_ec[256] =
@@ -490,41 +493,41 @@ static yyconst YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst YY_CHAR yy_meta[11] =
+static yyconst YY_CHAR yy_meta[10] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1
+        1,    1,    1,    1,    1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_uint16_t yy_base[19] =
+static yyconst flex_uint16_t yy_base[18] =
     {   0,
-        0,    0,   16,   17,   17,   17,   11,    9,   17,   17,
-        5,    3,   17,   17,    6,   17,   17,   17
+        0,    0,   15,   16,   16,   16,   10,    8,   16,   16,
+        4,    2,   16,    5,   16,   16,   16
     } ;
 
-static yyconst flex_int16_t yy_def[19] =
+static yyconst flex_int16_t yy_def[18] =
     {   0,
-       18,    1,   18,   18,   18,   18,   18,   18,   18,   18,
-       18,   18,   18,   18,   18,   18,   18,    0
+       17,    1,   17,   17,   17,   17,   17,   17,   17,   17,
+       17,   17,   17,   17,   17,   17,    0
     } ;
 
-static yyconst flex_uint16_t yy_nxt[28] =
+static yyconst flex_uint16_t yy_nxt[26] =
     {   0,
-        4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
-       15,   17,   16,   15,   14,   18,    3,   18,   18,   18,
-       18,   18,   18,   18,   18,   18,   18
+        4,    5,    6,    7,    8,    9,   10,   11,   12,   14,
+       16,   15,   14,   13,   17,    3,   17,   17,   17,   17,
+       17,   17,   17,   17,   17
     } ;
 
-static yyconst flex_int16_t yy_chk[28] =
+static yyconst flex_int16_t yy_chk[26] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-       15,   12,   11,    8,    7,    3,   18,   18,   18,   18,
-       18,   18,   18,   18,   18,   18,   18
+        1,    1,    1,    1,    1,    1,    1,    1,    1,   14,
+       12,   11,    8,    7,    3,   17,   17,   17,   17,   17,
+       17,   17,   17,   17,   17
     } ;
 
 static yyconst flex_int16_t yy_rule_linenum[13] =
     {   0,
-       19,   21,   22,   23,   24,   25,   26,   27,   28,   29,
-       30,   31
+       20,   22,   23,   24,   25,   26,   27,   28,   29,   30,
+       31,   32
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -921,13 +924,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 19 )
+				if ( yy_current_state >= 18 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 17 );
+		while ( yy_base[yy_current_state] != 16 );
 
 yy_find_action:
 /* %% [10.0] code to find the action number goes here */
@@ -977,12 +980,12 @@ YY_RULE_SETUP
 ;
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-{ return 0; }
+{ yyterminate(); }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-{ return 0; }
+{ return T_NEWLINE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -1336,7 +1339,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	for ( yy_cp = yyg->yytext_ptr + YY_MORE_ADJ; yy_cp < yyg->yy_c_buf_p; ++yy_cp )
 		{
 /* %% [16.0] code to find the next state goes here */
-		YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 10);
+		YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
 		if ( yy_accept[yy_current_state] )
 			{
 			yyg->yy_last_accepting_state = yy_current_state;
@@ -1345,7 +1348,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 19 )
+			if ( yy_current_state >= 18 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1370,7 +1373,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 /* %% [17.0] code to find the next state, and perhaps do backing up, goes here */
 	char *yy_cp = yyg->yy_c_buf_p;
 
-	YY_CHAR yy_c = 10;
+	YY_CHAR yy_c = 1;
 	if ( yy_accept[yy_current_state] )
 		{
 		yyg->yy_last_accepting_state = yy_current_state;
@@ -1379,11 +1382,11 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 19 )
+		if ( yy_current_state >= 18 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 18);
+	yy_is_jam = (yy_current_state == 17);
 
 	(void)yyg;
 	return yy_is_jam ? 0 : yy_current_state;
@@ -2365,3 +2368,4 @@ int main(int argc, char** argv) {
 
 }
 */
+

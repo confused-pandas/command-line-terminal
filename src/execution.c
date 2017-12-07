@@ -17,7 +17,7 @@ char* chemin_fifo_red = "tmp/teshFifoRed";
 
 int execution(commande* c) {
 
-    printf("Je lance l'execution de la commande\n");
+    printf("execution()\n");
     int resultat;
 
     switch (c->sep) {
@@ -47,6 +47,8 @@ int execution(commande* c) {
 
 
 int execution_and_or(liste_and_or* l) {
+
+	printf("execution_and_or()\n");
 
     char* true = "true";
     commande_simple true_simple = {&(true)};
@@ -94,6 +96,8 @@ int execution_and_or(liste_and_or* l) {
 
 int execution_pipe(liste_pipe* l, int niveau) {
 
+	printf("execution_pipe()\n");
+
     /* Bon j'ai pas envie de faire des pipe n'importe comment
     Je vais utiliser un tube nommé je pense ça sera plus propre*/
 
@@ -127,6 +131,8 @@ int execution_pipe(liste_pipe* l, int niveau) {
 }
 
 int execution_redirigee(commande_redirigee* c) {
+
+	printf("execution_redirigee()\n");
 
     remove(chemin_fifo_red);
     if (mkfifo(chemin_fifo_red,0666) != 0) {
@@ -180,6 +186,8 @@ int execution_redirigee(commande_redirigee* c) {
 }
 
 int execution_simple(commande_simple* c) {
+
+	printf("execution_simple()\n");
 
     /*
     Renvoie 0 si tout s'est bien passé,

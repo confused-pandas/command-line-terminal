@@ -1,4 +1,4 @@
-tesh : out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o bison flex
+tesh : tmp out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o bison flex
 	gcc out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall -g -DDEBUG
 
 out/main.o : out src/main.c
@@ -24,6 +24,9 @@ flex : bison src/lexer.l
 
 out :
 	mkdir out
+
+tmp :
+	mkdir tmp
 
 clean :
 	rm out/* -f

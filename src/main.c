@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -6,9 +7,15 @@
 #include "execution.h"
 #include "parser.h"
 #include "lexer.h"
+#include "verbose.h"
 
 extern commande* commande_lue;
 extern int yyparse(void);
+
+int option_verbose;
+char* prefixe_verbose = "\t)) ";
+int option_debug;
+char* prefixe_debug = "\t]] ";
 
 int main(int argc, char **argv){
 
@@ -17,10 +24,23 @@ int main(int argc, char **argv){
     int fini = 0;
 
     int erreur_analyse;
+	char* chaine_retour_erreur;
+
+	if (argc > 1) {
+		int i;
+		for(i=1;i<argc;i++) {
+			if (strcmp(argv[i],"--debug") == 0) {
+				option_debug = 1;
+			}
+			if (strcmp(argv[i],"--verbose") == 0) {
+				option_verbose = 1;
+			}
+		}
+	}
 
     while (!fini) {
 
-        printf("\t]] -- Tour de boucle main --\n");
+        debug("-- Tour de boucle main --");
     	//Affiche le prompt
     	gethostname(hostname, 128);
     	hostname[127] = '\0';
@@ -38,8 +58,9 @@ int main(int argc, char **argv){
         if (!erreur_analyse) {
             execution(commande_lue,0);
         } else {
-            printf("\t]] ! Apparement il y a eu une erreur d'analyse\n");
-            printf("\t]] ! Code de retour de yyparse() : %d\n",erreur_analyse);
+            verbose("Apparement il y a eu une erreur d'analyse");
+			sprintf(chaine_retour_erreur,"Code de retour de yyparse() : %d",erreur_analyse);
+            debug(chaine_retour_erreur);
         }
     }
 }

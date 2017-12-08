@@ -8,6 +8,7 @@
 
 #include "execution.h"
 #include "commande.h"
+#include "verbose.h"
 
 #define TAILLE_TAMPON_EXECUTION 32
 
@@ -28,7 +29,7 @@ int execution(commande* c, int niveau) {
     if (niveau == 0) {
         remove(chemin_fifo_pipe);
         if (mkfifo(chemin_fifo_pipe,0666) != 0) {
-            printf("Erreur lors de la création du fifo du pipe\n");
+            verbose("Erreur lors de la création du fifo du pipe");
             return -1;
         }
     }
@@ -37,17 +38,17 @@ int execution(commande* c, int niveau) {
 
     remove(chemin_fifo_red);
     if (mkfifo(chemin_fifo_red,0666) != 0) {
-        printf("Erreur lors de la création du fifo de commande redirigée\n");
+        verbose("Erreur lors de la création du fifo de commande redirigée");
         return -1;
     }
 
     fifo_red = fopen(chemin_fifo_red,"r+");
 
-    printf("\t]] execution()\n");
+    debug("execution()");
     int resultat;
     switch (c->sep) {
         case SEMICOLUMN:
-            printf("\t]] vu : ;\n");
+            debug("vu : ;");
             resultat = execution_and_or(c->l);
             if(c->suivante == NULL) {
                 return resultat;
@@ -56,14 +57,14 @@ int execution(commande* c, int niveau) {
             }
             break;
         case AMPERSAND:
-            printf("\t]] vu : &\n");
+            debug("vu : &");
             //TODO : a implementer
             break;
         case SEP_RIEN:
-            printf("\t]] vu : (SEP_RIEN)\n");
+            debug("vu : (SEP_RIEN)");
             resultat = execution_and_or(c->l);
             if (c->suivante != NULL) {
-                printf("Erreur : commande non nulle après séparateur de terminaison");
+                verbose("Erreur : commande non nulle après séparateur de terminaison");
                 return -1;
             } else {
                 return resultat;
@@ -76,7 +77,7 @@ int execution(commande* c, int niveau) {
 
 int execution_and_or(liste_and_or* l) {
 
-	printf("\t]] execution_and_or()\n");
+	debug("execution_and_or()");
 
     char* true = "true";
     commande_simple true_simple = {&(true)};
@@ -92,7 +93,7 @@ int execution_and_or(liste_and_or* l) {
 
     switch (l->op) {
         case OR: /* || */
-            printf("\t]] vu : ||\n");
+            debug("vu : ||");
             resultat = execution_pipe(l->liste);
             if (resultat == 0) {
                 // ça a marché, pas besoin de faire la commande suivante
@@ -102,7 +103,7 @@ int execution_and_or(liste_and_or* l) {
             return execution_pipe(l->suivante->liste);
             break;
         case AND: /* && */
-            printf("\t]] vu : &&\n");
+            debug("vu : &&");
             resultat = execution_pipe(l->liste);
             if (resultat != 0) {
                 // la première n'a pas marché, pas besoin de faire la suivante pour savoir que le AND
@@ -112,10 +113,10 @@ int execution_and_or(liste_and_or* l) {
             return execution_pipe(l->suivante->liste);
             break;
         case OP_RIEN: /* si c'est fini */
-            printf("\t]] vu : (OP_RIEN)\n");
+            debug("vu : (OP_RIEN)");
             resultat = execution_pipe(l->liste);
             if (l->suivante != NULL) {
-                printf("Erreur : commande non nulle après séparateur de terminaison\n");
+                verbose("Erreur : commande non nulle après séparateur de terminaison");
                 return -1;
             } else {
                 return resultat;
@@ -127,7 +128,7 @@ int execution_and_or(liste_and_or* l) {
 
 int execution_pipe(liste_pipe* l) {
 
-	printf("\t]] execution_pipe()\n");
+	debug("execution_pipe()");
 
     /* Bon j'ai pas envie de faire des pipe n'importe comment
     Je vais utiliser un tube nommé je pense ça sera plus propre*/
@@ -138,24 +139,24 @@ int execution_pipe(liste_pipe* l) {
 	if (fifo_pipe == NULL) {
 		/*
         if (mkfifo(chemin_fifo_pipe,0666) != 0) {
-            printf("Erreur lors de la création du fifo du pipe\n");
+            verbose("Erreur lors de la création du fifo du pipe");
             return -1;
         }
 		*/
-		printf("\t]] > réouverture du fifo du pipe\n");
+		debug("> réouverture du fifo du pipe");
         fifo_pipe = fopen(chemin_fifo_pipe,"r+");
 	}
 
 
     // Si il n'y a plus de commandes après
     if (l->suivante == NULL) {
-        printf("\t]] vu : Pas de pipe suivant\n");
+        debug("vu : Pas de pipe suivant");
         dup2(fileno(fifo_pipe),0);
         dup2(stdout_copy,1);
         return execution_redirigee(l->commande);
 
     } else {
-        printf("\t]] vu : |\n");
+        debug("vu : |");
         dup2(fileno(fifo_pipe),0);
         dup2(fileno(fifo_pipe),1);
         execution_redirigee(l->commande);
@@ -167,23 +168,23 @@ int execution_pipe(liste_pipe* l) {
 
 int execution_redirigee(commande_redirigee* c) {
 
-	printf("\t]] execution_redirigee()\n");
+	debug("execution_redirigee()");
 
 	if (fifo_red == NULL) {
 		/*
         if (mkfifo(chemin_fifo_red,0666) != 0) {
-            printf("Erreur lors de la création du fifo redirecteur\n");
+            verbose("Erreur lors de la création du fifo redirecteur");
             return -1;
         }
 		*/
-		printf("\t]] > réouverture du fifo de redirection\n");
+		debug("> réouverture du fifo de redirection");
         fifo_red = fopen(chemin_fifo_red,"r+");
 	}
 
     if (c->fichier != NULL) {
         switch(c->red) {
             case REDIR_INPUT:    /* < */
-                printf("\t]] vu : <\n");
+                debug("vu : <");
                 {
                 //bonjour l'efficacité : j'écris TOUT le fichier sur mon fifo transitoire
                 fd = fopen(c->fichier, "r");
@@ -200,7 +201,7 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case REDIR_OUTPUT:   /* > */
-                printf("\t]] vu : >\n");
+                debug("vu : >");
                 {
                 fd = fopen(c->fichier, "w");
                 dup2(fileno(fd),1);
@@ -208,7 +209,7 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case APPEND:         /* >> */
-                printf("\t]] vu : >>\n");
+                debug("vu : >>");
                 {
                 fd = fopen(c->fichier, "a");
                 dup2(fileno(fd),1);
@@ -216,12 +217,12 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case RED_RIEN:       /* si pas de redirection */
-                printf("\t]] vu : (RED_RIEN)\n");
-                printf("Erreur : commande non nulle après redirecteur nul\n");
+                debug("vu : (RED_RIEN)");
+                verbose("Erreur : commande non nulle après redirecteur nul");
                 return -1;
         }
     } else {
-        printf("\t]] vu : (RED_RIEN)\n");
+        debug("vu : (RED_RIEN)");
         return execution_simple(c->commande);
     }
 
@@ -230,7 +231,7 @@ int execution_redirigee(commande_redirigee* c) {
 
 int execution_simple(commande_simple* c) {
 
-	printf("\t]] execution_simple()\n");
+	debug("execution_simple()");
 
     /*
     Renvoie 0 si tout s'est bien passé,
@@ -242,7 +243,7 @@ int execution_simple(commande_simple* c) {
 
     // Si la commande est vide, on ne fait rien
     if (c->commande == NULL) {
-        printf("\t]] c->commande == NULL\n");
+        debug("c->commande == NULL");
         return 0;
     }
 
@@ -281,7 +282,7 @@ int execution_simple(commande_simple* c) {
         } else if (pid == 0) {
 
             //On lance la commande
-            printf("\t]] execvp(c->commande[0], c->commande)\n");
+            debug("execvp(c->commande[0], c->commande)");
             execvp(c->commande[0], c->commande);
 
             /*
@@ -302,7 +303,7 @@ int execution_simple(commande_simple* c) {
         }
 
         if ( WIFEXITED(status) ) {
-            printf("\t]] execvp() terminé correctement\n");
+            debug("execvp() terminé correctement");
 			tout_fermer();
             return WEXITSTATUS(status);
         }
@@ -311,7 +312,7 @@ int execution_simple(commande_simple* c) {
 }
 
 void tout_fermer() {
-	printf("\t]] > fermeture des fifo, remise à 0 de stdin / stdout\n");
+	debug("> fermeture des fifo, remise à 0 de stdin / stdout");
 	if (fifo_pipe != NULL) {
 		fclose(fifo_pipe);
 		fifo_pipe = NULL;	

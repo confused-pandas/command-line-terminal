@@ -1,5 +1,5 @@
-tesh : tmp out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o bison flex
-	gcc out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall -g -DDEBUG
+tesh : tmp out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o bison flex
+	gcc out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall -g -DDEBUG
 
 out/main.o : out src/main.c
 	gcc -c src/main.c -o out/main.o -Wall
@@ -18,6 +18,9 @@ out/lecture.o : out src/lecture.c
 
 out/commande.o : out src/commande.c
 	gcc -c src/commande.c -o out/commande.o -Wall
+
+out/verbose.o : out src/verbose.c
+	gcc -c src/verbose.c -o out/verbose.o -Wall
 
 bison : src/parser.y
 	bison -d --verbose --debug --no-lines -o src/parser.c src/parser.y -Wall

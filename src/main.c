@@ -4,6 +4,8 @@
 
 #include "lecture.h"
 #include "execution.h"
+#include "parser.h"
+#include "lexer.h"
 
 extern commande* commande_lue;
 extern int yyparse(void);
@@ -29,10 +31,11 @@ int main(int argc, char **argv){
 
         //Lecture & Analyse
         //erreur_analyse = yyparse();
+		yy_scan_string(lecture());
         yyparse();
 
         //Exécution
-        execution(commande_lue);
+        execution(commande_lue,0);
 
         /*
         if (!erreur_analyse) {

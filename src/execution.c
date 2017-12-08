@@ -43,11 +43,11 @@ int execution(commande* c, int niveau) {
 
     fifo_red = fopen(chemin_fifo_red,"r+");
 
-    printf("execution()\n");
+    printf("\t]] execution()\n");
     int resultat;
     switch (c->sep) {
         case SEMICOLUMN:
-            printf("vu : ;\n");
+            printf("\t]] vu : ;\n");
             resultat = execution_and_or(c->l);
             if(c->suivante == NULL) {
                 return resultat;
@@ -56,11 +56,11 @@ int execution(commande* c, int niveau) {
             }
             break;
         case AMPERSAND:
-            printf("vu : &\n");
+            printf("\t]] vu : &\n");
             //TODO : a implementer
             break;
         case SEP_RIEN:
-            printf("vu : (SEP_RIEN)\n");
+            printf("\t]] vu : (SEP_RIEN)\n");
             resultat = execution_and_or(c->l);
             if (c->suivante != NULL) {
                 printf("Erreur : commande non nulle après séparateur de terminaison");
@@ -76,7 +76,7 @@ int execution(commande* c, int niveau) {
 
 int execution_and_or(liste_and_or* l) {
 
-	printf("execution_and_or()\n");
+	printf("\t]] execution_and_or()\n");
 
     char* true = "true";
     commande_simple true_simple = {&(true)};
@@ -92,7 +92,7 @@ int execution_and_or(liste_and_or* l) {
 
     switch (l->op) {
         case OR: /* || */
-            printf("vu : ||\n");
+            printf("\t]] vu : ||\n");
             resultat = execution_pipe(l->liste);
             if (resultat == 0) {
                 // ça a marché, pas besoin de faire la commande suivante
@@ -102,7 +102,7 @@ int execution_and_or(liste_and_or* l) {
             return execution_pipe(l->suivante->liste);
             break;
         case AND: /* && */
-            printf("vu : &&\n");
+            printf("\t]] vu : &&\n");
             resultat = execution_pipe(l->liste);
             if (resultat != 0) {
                 // la première n'a pas marché, pas besoin de faire la suivante pour savoir que le AND
@@ -112,7 +112,7 @@ int execution_and_or(liste_and_or* l) {
             return execution_pipe(l->suivante->liste);
             break;
         case OP_RIEN: /* si c'est fini */
-            printf("vu : (OP_RIEN)\n");
+            printf("\t]] vu : (OP_RIEN)\n");
             resultat = execution_pipe(l->liste);
             if (l->suivante != NULL) {
                 printf("Erreur : commande non nulle après séparateur de terminaison\n");
@@ -127,20 +127,35 @@ int execution_and_or(liste_and_or* l) {
 
 int execution_pipe(liste_pipe* l) {
 
-	printf("execution_pipe()\n");
+	printf("\t]] execution_pipe()\n");
 
     /* Bon j'ai pas envie de faire des pipe n'importe comment
     Je vais utiliser un tube nommé je pense ça sera plus propre*/
+	
+	// Si c'est la deuxième fois qu'on appelle execution_pipe() dans le même appel à execution()
+	// Le fifo du pipe a normalement été fermé et son FILE* remit à NULL à la fin de execution_simple()
+	// Il faut donc le réouvrir
+	if (fifo_pipe == NULL) {
+		/*
+        if (mkfifo(chemin_fifo_pipe,0666) != 0) {
+            printf("Erreur lors de la création du fifo du pipe\n");
+            return -1;
+        }
+		*/
+		printf("\t]] > réouverture du fifo du pipe\n");
+        fifo_pipe = fopen(chemin_fifo_pipe,"r+");
+	}
+
 
     // Si il n'y a plus de commandes après
     if (l->suivante == NULL) {
-        printf("vu : Pas de pipe suivant\n");
+        printf("\t]] vu : Pas de pipe suivant\n");
         dup2(fileno(fifo_pipe),0);
         dup2(stdout_copy,1);
         return execution_redirigee(l->commande);
 
     } else {
-        printf("vu : |\n");
+        printf("\t]] vu : |\n");
         dup2(fileno(fifo_pipe),0);
         dup2(fileno(fifo_pipe),1);
         execution_redirigee(l->commande);
@@ -152,12 +167,23 @@ int execution_pipe(liste_pipe* l) {
 
 int execution_redirigee(commande_redirigee* c) {
 
-	printf("execution_redirigee()\n");
+	printf("\t]] execution_redirigee()\n");
+
+	if (fifo_red == NULL) {
+		/*
+        if (mkfifo(chemin_fifo_red,0666) != 0) {
+            printf("Erreur lors de la création du fifo redirecteur\n");
+            return -1;
+        }
+		*/
+		printf("\t]] > réouverture du fifo de redirection\n");
+        fifo_red = fopen(chemin_fifo_red,"r+");
+	}
 
     if (c->fichier != NULL) {
         switch(c->red) {
             case REDIR_INPUT:    /* < */
-                printf("vu : <\n");
+                printf("\t]] vu : <\n");
                 {
                 //bonjour l'efficacité : j'écris TOUT le fichier sur mon fifo transitoire
                 fd = fopen(c->fichier, "r");
@@ -174,7 +200,7 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case REDIR_OUTPUT:   /* > */
-                printf("vu : >\n");
+                printf("\t]] vu : >\n");
                 {
                 fd = fopen(c->fichier, "w");
                 dup2(fileno(fd),1);
@@ -182,7 +208,7 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case APPEND:         /* >> */
-                printf("vu : >>\n");
+                printf("\t]] vu : >>\n");
                 {
                 fd = fopen(c->fichier, "a");
                 dup2(fileno(fd),1);
@@ -190,12 +216,12 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case RED_RIEN:       /* si pas de redirection */
-                printf("vu : (RED_RIEN)\n");
+                printf("\t]] vu : (RED_RIEN)\n");
                 printf("Erreur : commande non nulle après redirecteur nul\n");
                 return -1;
         }
     } else {
-        printf("vu : (RED_RIEN)\n");
+        printf("\t]] vu : (RED_RIEN)\n");
         return execution_simple(c->commande);
     }
 
@@ -204,7 +230,7 @@ int execution_redirigee(commande_redirigee* c) {
 
 int execution_simple(commande_simple* c) {
 
-	printf("execution_simple()\n");
+	printf("\t]] execution_simple()\n");
 
     /*
     Renvoie 0 si tout s'est bien passé,
@@ -216,7 +242,7 @@ int execution_simple(commande_simple* c) {
 
     // Si la commande est vide, on ne fait rien
     if (c->commande == NULL) {
-        printf("c->commande == NULL\n");
+        printf("\t]] c->commande == NULL\n");
         return 0;
     }
 
@@ -255,7 +281,7 @@ int execution_simple(commande_simple* c) {
         } else if (pid == 0) {
 
             //On lance la commande
-            printf("execvp(c->commande[0], c->commande)\n");
+            printf("\t]] execvp(c->commande[0], c->commande)\n");
             execvp(c->commande[0], c->commande);
 
             /*
@@ -263,20 +289,20 @@ int execution_simple(commande_simple* c) {
             cela signifie que la commande n'est pas parvenue
             à se lancer, on peut renvoyer -1
             */
-			perror("Erreur : ");
+			perror("Erreur ");
             return -1;
 
         }
 
         //Dans le père 
         if ( waitpid(pid, &status, 0) == -1 ) {
-            perror("Erreur lors du waitpid : ");
+            perror("Erreur lors du waitpid ");
 			tout_fermer();
             return -1;
         }
 
         if ( WIFEXITED(status) ) {
-            printf("execvp() terminé correctement\n");
+            printf("\t]] execvp() terminé correctement\n");
 			tout_fermer();
             return WEXITSTATUS(status);
         }
@@ -285,7 +311,7 @@ int execution_simple(commande_simple* c) {
 }
 
 void tout_fermer() {
-	
+	printf("\t]] > fermeture des fifo, remise à 0 de stdin / stdout\n");
 	if (fifo_pipe != NULL) {
 		fclose(fifo_pipe);
 		fifo_pipe = NULL;	
@@ -302,4 +328,6 @@ void tout_fermer() {
 	dup2(stdout_copy, 1);
 	close(stdin_copy);
 	close(stdout_copy);
+	stdin_copy = dup(0);
+	stdout_copy = dup(1);
 }

@@ -16,11 +16,11 @@ int main(int argc, char **argv){
 	char pwd[1024];
     int fini = 0;
 
-    //int erreur_analyse;
+    int erreur_analyse;
 
     while (!fini) {
 
-        printf("Tour de boucle main\n");
+        printf("\t]] -- Tour de boucle main --\n");
     	//Affiche le prompt
     	gethostname(hostname, 128);
     	hostname[127] = '\0';
@@ -32,18 +32,14 @@ int main(int argc, char **argv){
         //Lecture & Analyse
         //erreur_analyse = yyparse();
 		yy_scan_string(lecture());
-        yyparse();
+        erreur_analyse = yyparse();
 
         //Exécution
-        execution(commande_lue,0);
-
-        /*
         if (!erreur_analyse) {
-            execution(commande_lue);
+            execution(commande_lue,0);
         } else {
-            printf("Je n'execute pas la commande apparement il y a eu une erreur\n");
-            printf("Code de retour de yyparse() : %d\n\n",erreur_analyse);
+            printf("\t]] ! Apparement il y a eu une erreur d'analyse\n");
+            printf("\t]] ! Code de retour de yyparse() : %d\n",erreur_analyse);
         }
-        */
     }
 }

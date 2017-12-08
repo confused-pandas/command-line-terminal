@@ -7,19 +7,19 @@
 	/* ATTENTION A BIEN IMPORTER LES STRUCTURES AVANT LE PARSER */
 	#include "commande.h"
 	#include "parser.h"
-	#define SAVE_TEXT yylval->string = strdup(yytext)
+	#define SAVE_TEXT yylval.string = strdup(yytext)
 
 %}
 	//Je fais de la magie noire je comprends rien laissez moi tranquille
-%option noyywrap
-%option reentrant bison-bridge
+%option nounput noinput noyywrap
+
 
 %%
 	/* PARITE REGLES */
 
 [ \t]				;
-<<EOF>> 			{ yyterminate(); }
-[\n]				{ return T_NEWLINE; }
+<<EOF>>				{ yyterminate(); }
+[\n\0]				{ yyterminate(); }
 [a-zA-Z0-9\_\-\./]+	{ SAVE_TEXT; return T_MOT; }
 ">"					{ return T_REDIR_INPUT; }
 "<"					{ return T_REDIR_OUTPUT; }

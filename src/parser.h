@@ -34,7 +34,7 @@
 # define YY_YY_SRC_PARSER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -82,7 +82,8 @@ typedef union YYSTYPE YYSTYPE;
 #endif
 
 
+extern YYSTYPE yylval;
 
-int yyparse (void * scanner);
+int yyparse (void);
 
 #endif /* !YY_YY_SRC_PARSER_H_INCLUDED  */

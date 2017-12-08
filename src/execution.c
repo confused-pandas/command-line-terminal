@@ -22,6 +22,7 @@ int execution(commande* c) {
 
     switch (c->sep) {
         case SEMICOLUMN:
+            printf("vu : ;\n");
             resultat = execution_and_or(c->l);
             if(c->suivante == NULL) {
                 return resultat;
@@ -30,9 +31,11 @@ int execution(commande* c) {
             }
             break;
         case AMPERSAND:
+            printf("vu : &\n");
             //TODO : a implementer
             break;
         case SEP_RIEN:
+            printf("vu : (SEP_RIEN)\n");
             resultat = execution_and_or(c->l);
             if (c->suivante != NULL) {
                 printf("Erreur : commande non nulle après séparateur de terminaison");
@@ -64,6 +67,7 @@ int execution_and_or(liste_and_or* l) {
 
     switch (l->op) {
         case OR: /* || */
+            printf("vu : ||\n");
             resultat = execution_pipe(l->liste,0);
             if (resultat == 0) {
                 // ça a marché, pas besoin de faire la commande suivante
@@ -73,6 +77,7 @@ int execution_and_or(liste_and_or* l) {
             return execution_pipe(l->suivante->liste,0);
             break;
         case AND: /* && */
+            printf("vu : &&\n");
             resultat = execution_pipe(l->liste,0);
             if (resultat != 0) {
                 // la première n'a pas marché, pas besoin de faire la suivante pour savoir que le AND
@@ -82,6 +87,7 @@ int execution_and_or(liste_and_or* l) {
             return execution_pipe(l->suivante->liste,0);
             break;
         case OP_RIEN: /* si c'est fini */
+            printf("vu : (OP_RIEN)\n");
             resultat = execution_pipe(l->liste,0);
             if (l->suivante != NULL) {
                 printf("Erreur : commande non nulle après séparateur de terminaison\n");
@@ -114,13 +120,13 @@ int execution_pipe(liste_pipe* l, int niveau) {
 
     // Si il n'y a plus de commandes après
     if (l->suivante == NULL) {
-
+        printf("vu : Pas de pipe suivant\n");
         dup2(fileno(fifo_pipe),0);
         dup2(fileno(stdout),1);
         return execution_redirigee(l->commande);
 
     } else {
-
+        printf("vu : |\n");
         dup2(fileno(fifo_pipe),0);
         dup2(fileno(fifo_pipe),1);
         execution_redirigee(l->commande);
@@ -145,6 +151,7 @@ int execution_redirigee(commande_redirigee* c) {
     if (c->fichier != NULL) {
         switch(c->red) {
             case REDIR_INPUT:    /* < */
+                printf("vu : <\n");
                 {
                 //bonjour l'efficacité : j'écris TOUT le fichier sur mon fifo transitoire
                 FILE* fd = fopen(c->fichier, "r");
@@ -161,6 +168,7 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case REDIR_OUTPUT:   /* > */
+                printf("vu : >\n");
                 {
                 FILE* fd = fopen(c->fichier, "w");
                 dup2(fileno(fd),1);
@@ -168,6 +176,7 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case APPEND:         /* >> */
+                printf("vu : >>\n");
                 {
                 FILE* fd = fopen(c->fichier, "a");
                 dup2(fileno(fd),1);
@@ -175,10 +184,12 @@ int execution_redirigee(commande_redirigee* c) {
                 break;
                 }
             case RED_RIEN:       /* si pas de redirection */
+                printf("vu : (RED_RIEN)\n");
                 printf("Erreur : commande non nulle après redirecteur nul\n");
                 return -1;
         }
     } else {
+        printf("vu : (RED_RIEN)\n");
         return execution_simple(c->commande);
     }
 
@@ -195,10 +206,11 @@ int execution_simple(commande_simple* c) {
     */
 
     pid_t pid;
-    int status;;
+    int status;
 
     //Si la commande est vide, on ne fait rien
     if (c->commande == NULL) {
+        printf("c->commande == NULL\n");
         return 0;
     }
 
@@ -231,6 +243,7 @@ int execution_simple(commande_simple* c) {
         } else if (pid == 0) {
 
             //On lance la commande
+            printf("execvp(c->commande[0], c->commande)\n");
             execvp(c->commande[0], c->commande);
 
             /*
@@ -249,6 +262,7 @@ int execution_simple(commande_simple* c) {
         }
 
         if ( WIFEXITED(status) ) {
+            printf("execvp() terminé correctement\n");
             return WEXITSTATUS(status);
         }
     }

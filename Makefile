@@ -7,23 +7,23 @@ out/main.o : out src/main.c
 out/execution.o : out src/execution.c
 	gcc -c src/execution.c -o out/execution.o -Wall
 
-out/parser.o : out bison
+out/parser.o : out bison src/parser.c
 	gcc -c src/parser.c -o out/parser.o -Wall
 
-out/lexer.o : out flex
+out/lexer.o : out flex src/lexer.c
 	gcc -c src/lexer.c -o out/lexer.o -Wall
 
-out/lecture.o : out
+out/lecture.o : out src/lecture.c
 	gcc -c src/lecture.c -o out/lecture.o -Wall
 
-out/commande.o : out
+out/commande.o : out src/commande.c
 	gcc -c src/commande.c -o out/commande.o -Wall
 
 bison : src/parser.y
-	bison -d --no-lines --verbose -o src/parser.c src/parser.y -Wall
+	bison -d --verbose --debug --no-lines -o src/parser.c src/parser.y -Wall
 
 flex : bison src/lexer.l
-	flex --debug --header-file=src/lexer.h --noline -o src/lexer.c src/lexer.l
+	flex --verbose --debug --header-file=src/lexer.h --noline -o src/lexer.c src/lexer.l
 
 out :
 	mkdir out

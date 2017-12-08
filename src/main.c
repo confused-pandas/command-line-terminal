@@ -4,11 +4,9 @@
 
 #include "lecture.h"
 #include "execution.h"
-#include "parser.h"
-#include "lexer.h"
 
 extern commande* commande_lue;
-extern int yyparse(void* scanner);
+extern int yyparse(void);
 
 int main(int argc, char **argv){
 
@@ -16,10 +14,7 @@ int main(int argc, char **argv){
 	char pwd[1024];
     int fini = 0;
 
-    int erreur_analyse;
-
-    void* scanner;
-    char* ligne_lue;
+    //int erreur_analyse;
 
     while (!fini) {
 
@@ -33,22 +28,19 @@ int main(int argc, char **argv){
         fflush(stdout);
 
         //Lecture & Analyse
-        ligne_lue = lecture();
-        YY_BUFFER_STATE buf;
-        yylex_init(&scanner);
-        buf = yy_scan_string(ligne_lue, scanner);
-        erreur_analyse = yyparse(scanner);
+        //erreur_analyse = yyparse();
+        yyparse();
 
         //Exécution
+        execution(commande_lue);
+
+        /*
         if (!erreur_analyse) {
             execution(commande_lue);
         } else {
             printf("Je n'execute pas la commande apparement il y a eu une erreur\n");
             printf("Code de retour de yyparse() : %d\n\n",erreur_analyse);
         }
-
-        yy_delete_buffer(buf, scanner);
-        yylex_destroy(scanner);
-
+        */
     }
 }

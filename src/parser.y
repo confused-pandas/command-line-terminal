@@ -1,11 +1,10 @@
 %{
 	#include "commande.h"
-    #include "execution.h"
 	#include <stdio.h>
 	commande* commande_lue;
 
 	extern int yylex();
-	void yyerror(void* scanner, const char* s) { printf("Erreur à l'analyse : %s\n",s); }
+	void yyerror(const char* s) { printf("Erreur à l'analyse : %s\n",s); }
 %}
 
 %union {
@@ -20,9 +19,6 @@
 
 	/* Pour des messages d'erreur plus complets */
 %define parse.error verbose
-%pure-parser
-%lex-param {void * scanner}
-%parse-param {void * scanner}
 
 %token <string> T_MOT
 %token <vide> T_SEMICOLON T_AMPERSAND
@@ -42,9 +38,7 @@
 
 %%
 
-CP	:
-	  C T_NEWLINE CP { commande_lue = $1; }
-	| C				 { commande_lue = $1; }
+CP	: C	{ commande_lue = $1; }
 	;
 
 C 	:

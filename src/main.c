@@ -47,11 +47,11 @@ int main(int argc, char **argv){
     	getcwd(pwd, 1024);
     	pwd[1023] = '\0';
     	printf("%s@%s:%s$ ",getenv("USER"),hostname,pwd);
-        fflush(stdout);
 
-        //Lecture & Analyse
-        //erreur_analyse = yyparse();
+        //Lecture
 		yy_scan_string(lecture());
+
+        //Analyse
         erreur_analyse = yyparse();
 
         //Exécution

@@ -20,6 +20,8 @@ FILE* fd = NULL;
 int stdin_copy;
 int stdout_copy;
 
+extern int option_debug;
+
 int execution(commande* c, int niveau) {
 
 	stdin_copy = dup(0);
@@ -245,6 +247,17 @@ int execution_simple(commande_simple* c) {
     if (c->commande == NULL) {
         debug("c->commande == NULL");
         return 0;
+    }
+
+    if (option_debug) {
+        debug("Commande lue :");
+        int i = 0;
+        while(c->commande[i] != NULL) {
+            char* chaine_tampon = (char*) malloc(sizeof(char));
+            sprintf(chaine_tampon,"\t%s",c->commande[i]);
+            debug(chaine_tampon);
+            i++;
+        }
     }
 
     // On traite le cd séparément

@@ -854,7 +854,7 @@ YY_DECL
 	{
 /* %% [7.0] user's declarations go here */
 
-	/* PARITE REGLES */
+	/* PARTIE REGLES */
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{

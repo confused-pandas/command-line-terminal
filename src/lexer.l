@@ -15,7 +15,7 @@
 
 
 %%
-	/* PARITE REGLES */
+	/* PARTIE REGLES */
 
 [ \t]				;
 <<EOF>>				{ yyterminate(); }

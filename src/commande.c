@@ -14,18 +14,10 @@ void cs_append(commande_simple* commande_simple, char* mot) {
 
 void cs_fusion(commande_simple* debut, commande_simple* suite) {
 
-	int taille_debut = taille(debut->commande);
-	int taille_suite = taille(suite->commande);
-
-	debut->commande = realloc(debut->commande, taille_debut+taille_suite+1);
-	debut->commande[taille_debut+taille_suite] = NULL;
-
-	int indice_sur_debut = taille_debut;
-	int indice_sur_suite = 0;
-	while(debut->commande[indice_sur_debut] != NULL) {
-		debut->commande[indice_sur_debut] = strdup(suite->commande[indice_sur_suite]);
-		indice_sur_debut++;
-		indice_sur_suite++;
+	int i = 0;
+	while(suite->commande[i] != NULL) {
+		cs_append(debut,suite->commande[i]);
+		i++;
 	}
 
 }

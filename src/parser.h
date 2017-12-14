@@ -34,7 +34,7 @@
 # define YY_YY_SRC_PARSER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -63,7 +63,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-
+#line 10 "src/parser.y" /* yacc.c:1909  */
 
 	char* string;
 	commande_simple* com_simple;
@@ -73,7 +73,7 @@ union YYSTYPE
 	commande* commande_complete;
 	int vide;
 
-
+#line 77 "src/parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

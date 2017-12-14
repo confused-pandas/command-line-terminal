@@ -4,29 +4,12 @@
 #include "commande.h"
 
 void cs_append(commande_simple* commande_simple, char* mot) {
-
-	int taille_cs = taille(commande_simple->commande);
-	commande_simple->commande = realloc(commande_simple->commande, taille_cs+2);
-	commande_simple->commande[taille_cs] = strdup(mot);
-	commande_simple->commande[taille_cs+1] = NULL;
-
-}
-
-void cs_fusion(commande_simple* debut, commande_simple* suite) {
-
-	int i = 0;
-	while(suite->commande[i] != NULL) {
-		cs_append(debut,suite->commande[i]);
-		i++;
-	}
-
+	append(commande_simple->commande,mot);
 }
 
 commande_simple* new_commande_simple() {
 	commande_simple* cs = (commande_simple*) malloc(sizeof(commande_simple));
-	char** vide = (char**) malloc(sizeof(char*));
-	vide[0] = NULL;
-	cs->commande = vide;
+	cs->commande = new_string_vector();
 	return cs;
 }
 
@@ -49,14 +32,4 @@ liste_and_or* new_and_or() {
 commande* new_commande() {
 	commande* cm = (commande*) malloc(sizeof(commande));
 	return cm;
-}
-
-int taille(char** tab) {
-
-	int res = 0;
-	while(tab[res] != NULL) {
-		res++;
-	}
-	return res;
-
 }

@@ -67,7 +67,7 @@ CR 	:
 
 CS:
 	  T_MOT		{ $$ = new_commande_simple(); cs_append($$,$1); }
-	| T_MOT CS	{ $$ = new_commande_simple(); cs_append($$,$1); cs_fusion($$,$2); }
+	| CS T_MOT	{ cs_append($1,$2); $$ = $1; }
 	;
 
 %%

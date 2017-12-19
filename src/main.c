@@ -24,7 +24,7 @@ int main(int argc, char **argv){
     int fini = 0;
 
     int erreur_analyse;
-	char* chaine_retour_erreur;
+	char* chaine_retour_erreur = (char*) malloc(sizeof(char));
 
 	if (argc > 1) {
 		int i;

@@ -1,5 +1,5 @@
-tesh : tmp out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o bison flex
-	gcc out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall -g -DDEBUG
+tesh : tmp out/string_vector.o out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o bison flex
+	gcc out/string_vector.o out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall -g -DDEBUG
 
 out/main.o : out src/main.c
 	gcc -c src/main.c -o out/main.o -Wall
@@ -22,11 +22,14 @@ out/commande.o : out src/commande.c
 out/verbose.o : out src/verbose.c
 	gcc -c src/verbose.c -o out/verbose.o -Wall
 
+out/string_vector.o : out src/string_vector.c
+	gcc -c src/string_vector.c -o out/string_vector.o -Wall
+
 bison : src/parser.y
-	bison -d --no-lines -o src/parser.c src/parser.y -Wall
+	bison -d -o src/parser.c src/parser.y -Wall
 
 flex : bison src/lexer.l
-	flex --header-file=src/lexer.h --noline -o src/lexer.c src/lexer.l
+	flex --header-file=src/lexer.h -o src/lexer.c src/lexer.l
 
 out :
 	mkdir out

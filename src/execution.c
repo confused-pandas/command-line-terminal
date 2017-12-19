@@ -9,6 +9,7 @@
 #include "execution.h"
 #include "commande.h"
 #include "verbose.h"
+#include "string_vector.h"
 
 #define TAILLE_TAMPON_EXECUTION 32
 
@@ -82,12 +83,14 @@ int execution_and_or(liste_and_or* l) {
 	debug("execution_and_or()");
 
     char* true = "true";
-    commande_simple true_simple = {&(true)};
+    string_vector true_sv = {&(true),1,1,4};
+    commande_simple true_simple = {&(true_sv)};
     commande_redirigee true_redirige = {&(true_simple),RED_RIEN,NULL};
     liste_pipe true_liste_pipe = {&(true_redirige),NULL};
 
     char* false = "false";
-    commande_simple false_simple = {&(false)};
+    string_vector false_sv = {&(false),1,1,4};
+    commande_simple false_simple = {&(false_sv)};
     commande_redirigee false_redirige = {&(false_simple),RED_RIEN,NULL};
     liste_pipe false_liste_pipe = {&(false_redirige),NULL};
 
@@ -244,32 +247,31 @@ int execution_simple(commande_simple* c) {
     int status;
 
     // Si la commande est vide, on ne fait rien
-    if (c->commande == NULL) {
+    if (c->commande->taille == 0) {
         debug("c->commande == NULL");
         return 0;
     }
 
     if (option_debug) {
         debug("Commande lue :");
-        int i = 0;
-        while(c->commande[i] != NULL) {
-            char* chaine_tampon = (char*) malloc(sizeof(char));
-            sprintf(chaine_tampon,"\t%s",c->commande[i]);
+        int i;
+        char* chaine_tampon = (char*) malloc(sizeof(char));
+        for(i=0; i<c->commande->taille; i++) {
+            sprintf(chaine_tampon,"\t%s",c->commande->mots[i]);
             debug(chaine_tampon);
-            i++;
         }
     }
 
     // On traite le cd séparément
     // ATTENTION ET SI IL FAUT LIRE LES PARAMETRES DU CD SUR L'ENTREE STANDARD ?
     // à faire pour plus tard ...
-    if (strcmp(c->commande[0],"cd")==0){
+    if (strcmp(c->commande->mots[0],"cd")==0){
 		int erreur;
-        if (c->commande[1] != NULL) {
-            if (strcmp(c->commande[1], "~") == 0) {
+        if (c->commande->mots[1] != NULL) {
+            if (strcmp(c->commande->mots[1], "~") == 0) {
                 erreur = chdir(getenv("HOME"));
             } else {
-                erreur = chdir(c->commande[1]);
+                erreur = chdir(c->commande->mots[1]);
             }
         } else {
             erreur = chdir(getenv("HOME"));
@@ -295,8 +297,9 @@ int execution_simple(commande_simple* c) {
         } else if (pid == 0) {
 
             //On lance la commande
-            debug("execvp(c->commande[0], c->commande)");
-            execvp(c->commande[0], c->commande);
+            debug("execvp(c->commande->mots[0], c->commande->mots);");
+            char** chaine = get_NULL_terminated_form(c->commande);
+            execvp(chaine[0], chaine);
 
             /*
             Si jamais on arrive à cette ligne
@@ -311,7 +314,7 @@ int execution_simple(commande_simple* c) {
         //Dans le père 
         if ( waitpid(pid, &status, 0) == -1 ) {
             perror("Erreur lors du waitpid ");
-			tout_fermer();
+            tout_fermer();
             return -1;
         }
 
@@ -320,6 +323,7 @@ int execution_simple(commande_simple* c) {
 			tout_fermer();
             return WEXITSTATUS(status);
         }
+        tout_fermer();
     }
     return -1;
 }

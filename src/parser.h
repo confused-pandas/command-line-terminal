@@ -63,7 +63,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-
+#line 10 "src/parser.y" /* yacc.c:1909  */
 
 	char* string;
 	commande_simple* com_simple;
@@ -73,7 +73,7 @@ union YYSTYPE
 	commande* commande_complete;
 	int vide;
 
-
+#line 77 "src/parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -1,3 +1,6 @@
+#line 2 "src/lexer.c"
+
+#line 4 "src/lexer.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -468,7 +471,9 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
+#line 1 "src/lexer.l"
 /* PARTIE DEFINITIONS */
+#line 3 "src/lexer.l"
 	/* Le code C ici présent se copié tel quel */
 	#include <stdio.h>
 	#include <string.h>
@@ -480,6 +485,7 @@ char *yytext;
 
 //Je fais de la magie noire je comprends rien laissez moi tranquille
 #define YY_NO_INPUT 1
+#line 489 "src/lexer.c"
 
 #define INITIAL 0
 
@@ -696,7 +702,11 @@ YY_DECL
 
 	{
 
+#line 17 "src/lexer.l"
+
 	/* PARTIE REGLES */
+
+#line 709 "src/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -755,60 +765,75 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
+#line 20 "src/lexer.l"
 ;
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
+#line 21 "src/lexer.l"
 { yyterminate(); }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
+#line 22 "src/lexer.l"
 { yyterminate(); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
+#line 23 "src/lexer.l"
 { SAVE_TEXT; return T_MOT; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
+#line 24 "src/lexer.l"
 { return T_REDIR_INPUT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
+#line 25 "src/lexer.l"
 { return T_REDIR_OUTPUT; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
+#line 26 "src/lexer.l"
 { return T_APPEND; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
+#line 27 "src/lexer.l"
 { return T_PIPE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
+#line 28 "src/lexer.l"
 { return T_AND; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
+#line 29 "src/lexer.l"
 { return T_OR; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
+#line 30 "src/lexer.l"
 { return T_SEMICOLON; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
+#line 31 "src/lexer.l"
 { return T_AMPERSAND; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
+#line 32 "src/lexer.l"
 { printf("!! Symbole inconnu : %s\n",yytext);yyterminate(); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
+#line 34 "src/lexer.l"
 ECHO;
 	YY_BREAK
+#line 836 "src/lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1769,6 +1794,8 @@ void yyfree (void * ptr )
 }
 
 #define YYTABLES_NAME "yytables"
+#line 34 "src/lexer.l"
+
 
 	/* PARTIE ? */
 /*

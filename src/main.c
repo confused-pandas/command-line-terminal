@@ -68,6 +68,10 @@ int main(int argc, char* argv[]){
             }
         }
     }
+
+    if (isatty(0) != 1) {
+        mode_non_interactif = 1;
+    }
         
 
     while (!fini) {
@@ -84,6 +88,10 @@ int main(int argc, char* argv[]){
 
         //Lecture
         char* commande = lecture();
+
+        if (commande == NULL) {
+            return -1;
+        }
 
         if (commande != NULL && commande[0] != '\0') {
 

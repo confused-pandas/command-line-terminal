@@ -23,10 +23,10 @@ out/verbose.o : out src/verbose.c
 	gcc -c src/verbose.c -o out/verbose.o -Wall
 
 bison : src/parser.y
-	bison -d --verbose --debug --no-lines -o src/parser.c src/parser.y -Wall
+	bison -d --no-lines -o src/parser.c src/parser.y -Wall
 
 flex : bison src/lexer.l
-	flex --verbose --debug --header-file=src/lexer.h --noline -o src/lexer.c src/lexer.l
+	flex --header-file=src/lexer.h --noline -o src/lexer.c src/lexer.l
 
 out :
 	mkdir out

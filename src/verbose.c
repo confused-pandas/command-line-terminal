@@ -6,7 +6,7 @@ extern int option_debug;
 extern char* prefixe_debug;
 
 void verbose(const char* message) {
-	if (option_verbose) {
+	if (option_verbose || option_debug) {
 		printf("%s%s\n",prefixe_verbose,message);	
 	}
 }

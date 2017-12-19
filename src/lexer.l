@@ -17,19 +17,19 @@
 %%
 	/* PARTIE REGLES */
 
-[ \t]				;
-<<EOF>>				{ yyterminate(); }
-[\n\0]				{ yyterminate(); }
-[a-zA-Z0-9\_\-\./]+	{ SAVE_TEXT; return T_MOT; }
-">"					{ return T_REDIR_INPUT; }
-"<"					{ return T_REDIR_OUTPUT; }
-">>"				{ return T_APPEND; }
-"|"					{ return T_PIPE; }
-"&&"				{ return T_AND; }
-"||"				{ return T_OR; }
-";"					{ return T_SEMICOLON; }
-"&"					{ return T_AMPERSAND; }
-.					{ printf("!! Symbole inconnu : %s\n",yytext);yyterminate(); }
+[ \t]					;
+<<EOF>>					{ yyterminate(); }
+[\n\0]					{ yyterminate(); }
+[a-zA-Z0-9\_\-\./!]+	{ SAVE_TEXT; return T_MOT; }
+">"						{ return T_REDIR_INPUT; }
+"<"						{ return T_REDIR_OUTPUT; }
+">>"					{ return T_APPEND; }
+"|"						{ return T_PIPE; }
+"&&"					{ return T_AND; }
+"||"					{ return T_OR; }
+";"						{ return T_SEMICOLON; }
+"&"						{ return T_AMPERSAND; }
+.						{ printf("!! Symbole inconnu : %s\n",yytext);yyterminate(); }
 
 %%
 	/* PARTIE ? */

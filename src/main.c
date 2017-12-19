@@ -42,11 +42,13 @@ int main(int argc, char **argv){
 
         debug("-- Tour de boucle main --");
     	//Affiche le prompt
-    	gethostname(hostname, 128);
-    	hostname[127] = '\0';
-    	getcwd(pwd, 1024);
-    	pwd[1023] = '\0';
-    	printf("%s@%s:%s$ ",getenv("USER"),hostname,pwd);
+        if(isatty(0)) {
+        	gethostname(hostname, 128);
+        	hostname[127] = '\0';
+        	getcwd(pwd, 1024);
+        	pwd[1023] = '\0';
+        	printf("%s@%s:%s$ ",getenv("USER"),hostname,pwd);
+        }
 
         //Lecture
 		yy_scan_string(lecture());

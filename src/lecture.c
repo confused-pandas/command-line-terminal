@@ -21,15 +21,13 @@ char* lecture() {
 
         //Si l'utilisateur a fini sa commande il appuye sur entrée
         //Ce qui envoie un caractère \n
-        if (c == '\n'){
+        if (c == '\n' || c == EOF){
+
             //C'est donc le moment de fermer la chaine
             commande[position] = '\0';
             return commande;
 
-        } else if ( c == EOF ) {
-            return NULL;
-        } 
-        else {
+        } else {
 
             commande[position] = c;
 

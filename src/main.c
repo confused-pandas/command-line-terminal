@@ -22,12 +22,33 @@ int main(int argc, char* argv[]){
     int mode_non_interactif = 0;
 
     FILE* file;
+    int fichier_ouvert = 0;
+    int indice_path = -1;
 
     int valeur_retour = 0;
 
+    int i;
+    for (i=1;i<argc;i++) {
+       if (strcmp(argv[i],"-e") == 0) { option_e = 1; continue; }
+       if (strcmp(argv[i],"-r") == 0) { option_r = 1; continue; }
+       file = freopen(argv[i],"r",stdin);
+       fichier_ouvert = 1;
+       indice_path = i;
+    }
+
+    if (fichier_ouvert && file == NULL) {
+        printf("J'ai essayé d'ouvrir %s comme un fichier mais je n'ai pas réussi\n",argv[indice_path]);
+        return -1;
+    }
+
+    if (isatty(0) != 1) {
+        mode_non_interactif = 1;
+    }
+
+    /*
     if (argc > 3) {
         errno = 7;
-        perror("Error ");
+        perror("Error ");   
         exit(7);
     }
 
@@ -68,13 +89,9 @@ int main(int argc, char* argv[]){
             }
         }
     }
-
-    if (isatty(0) != 1) {
-        mode_non_interactif = 1;
-    }
+    */
         
-
-    while (!fini) {
+    while (!feof(stdin)) {
 
     	//Affiche le prompt si on est en mode interactif
         if (!mode_non_interactif) {
@@ -89,32 +106,20 @@ int main(int argc, char* argv[]){
         //Lecture
         char* commande = lecture();
 
-        if (commande == NULL) {
-            return -1;
+        if (commande[0] == '\0') {
+            continue;
         }
+        //printf("Commande lue : %s\n",commande);
 
-        if (commande != NULL && commande[0] != '\0') {
+        //Analyse
+        char** parsed = analyse(commande);
 
-            //Analyse
-            char** parsed = analyse(commande);
-
-            //Ex�cution
-            valeur_retour = execution(parsed);
-        }
-
-        
+        //Exécution
+        valeur_retour = execution(parsed);
 
         if (option_e == 1) {
             if (valeur_retour != 0) {
-                printf("%d",valeur_retour);
-                return 0;
-            }
-        }
-
-        if (mode_non_interactif == 1 && feof(file)) {
-            return 0;
-        } else if (mode_non_interactif == 1 && option_e == 1) {
-            if (valeur_retour != 0){
+                //printf("Valeur retour d'erreur : %d",valeur_retour);
                 return 0;
             }
         }

@@ -97,22 +97,33 @@ int execution_simple(char** parsed) {
         } else {
             chdir(getenv("HOME"));
         }
+        return 0;
     }
     else{
         pid = fork();
         if (pid < 0) {
             fprintf(stderr, "Erreur dans %d\n", getpid());
             perror("Erreur lors du fork");
-            exit(1);
+            return -1;
         }else if (pid == 0) {
             errexec = execvp(parsed[0], parsed);
             if (errexec == -1) {
                 perror("Erreur lors de l'exécution");
+                exit(-1);
             }
-            exit(EXIT_FAILURE);
         }else{ 
-            wait(NULL);
+            int status;
+
+            if ( waitpid(pid, &status, 0) == -1 ) {
+                perror("waitpid() failed");
+                exit(EXIT_FAILURE);
+            }
+
+            if ( WIFEXITED(status) ) {
+                int es = WEXITSTATUS(status);
+                return es;
+            }
         }
     }
-    return 1;
+    return -1;
 }

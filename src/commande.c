@@ -10,7 +10,7 @@ void cs_append(commande_simple* cs, char* mot) {
 	if (cs->taille == cs->taille_reelle) {
 
 		cs->taille_reelle += cs->taille_realloc;
-		cs->mots = realloc(cs->mots,cs->taille_reelle);
+		cs->mots = realloc(cs->mots,cs->taille_reelle*sizeof(char*));
 
 		if (cs->mots == NULL) {
 			printf("Erreur lors de la réallocation d'un string_vector\n");

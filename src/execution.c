@@ -146,26 +146,41 @@ int execution_pipe_(liste_pipe* l, int pipe_in[2]) {
 int execution_redirigee(commande_redirigee* c) {
 
     debug("execution_redirigee()");
+    if (c->fichier != NULL) {
 
-    switch (c->red) {
-        case REDIR_INPUT: // <
-            NULL; // ON sait pas pk mais gcc m'empèche de définir une variable juste après un case:
-            freopen(c->fichier, "r", stdin);
-            return execution_simple(c->commande);
-        case REDIR_OUTPUT: // >
-            freopen(c->fichier, "w", stdout);
-            return execution_simple(c->commande);
-        case APPEND: // >>
-            freopen(c->fichier, "a", stdout);
-            return execution_simple(c->commande);
-        case RED_RIEN:
-            if (c->fichier != NULL) {
-                debug("Fichier non nul après un redirecteur vide !");
+        pid_t pid = fork();
+        if (pid == 0) { 
+            switch (c->red) {
+                case REDIR_INPUT: // <
+                    NULL; // ON sait pas pk mais gcc m'empèche de définir une variable juste après un case:
+                    freopen(c->fichier, "r", stdin);
+                    exit(execution_simple(c->commande));
+                case REDIR_OUTPUT: // >
+                    freopen(c->fichier, "w", stdout);
+                    exit(execution_simple(c->commande));
+                case APPEND: // >>
+                    freopen(c->fichier, "a", stdout);
+                    exit(execution_simple(c->commande));
+                case RED_RIEN:
+                    debug("Fichier non nul après un redirecteur vide !");
+                    exit(-1);
+                default:
+                    debug("wtf ? (commande_redirigee)");
+                    exit(-1);
             }
-            return execution_simple(c->commande);
-        default:
-            debug("wtf ? (commande_redirigee)");
-            return -1;
+        } else {
+            int status;
+            if ( waitpid(pid, &status, 0) == -1 ) {
+                perror("waitpid() failed");
+                exit(EXIT_FAILURE);
+            }
+            if ( WIFEXITED(status) ) {
+                int es = WEXITSTATUS(status);
+                return es;
+            }
+        }
+    } else {
+        return execution_simple(c->commande);
     }
     return -1;
 }

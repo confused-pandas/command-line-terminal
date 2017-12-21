@@ -33,6 +33,10 @@ int main(int argc, char **argv){
     void  (*add_history)(char*);
     void* handle;
     int fini = 0;
+    char hostname[256];
+    char pwd[256];
+    char prompt[512];
+    char* retour_readline;
 
 	if (argc > 1) {
 		int i;
@@ -73,52 +77,39 @@ int main(int argc, char **argv){
 
     while (!feof(stdin) && !fini) {
 
-        char* retour_readline = (char*)malloc(sizeof(char)*1024);
-        char* prompt = (char*)malloc(sizeof(char)*1024);
-
-        char* hostname = (char*) malloc(sizeof(char)*128);
-        char* pwd = (char*) malloc(sizeof(char)*1024);
-
-        int erreur_analyse;
-        char* chaine_retour_erreur = (char*) malloc(sizeof(char)*1024);
-
 
         debug("-- Tour de boucle main --");
     	//Affiche le prompt
+        
         if(!option_no_prompt) {
-        	gethostname(hostname, 128);
-        	getcwd(pwd, 1024);
-        	snprintf(prompt,1024,"%s@%s:%s$ ",getenv("USER"),hostname,pwd);
+        	gethostname(hostname, 256);;
+        	getcwd(pwd, 256);
+        	snprintf(prompt,512,"%s@%s:%s$ ",getenv("USER"),hostname,pwd);
         }
 
         if (option_r) {
             retour_readline = readline(prompt);
             add_history(retour_readline);
         } else {
-            printf("%s",prompt);
+            if (!option_no_prompt) {
+                printf("%s",prompt);
+            }
             retour_readline = lecture();
         }
 
+        // Lecture
         yy_scan_string(retour_readline);
         free(retour_readline);
 
-        // Lecture & Analyse
-        erreur_analyse = yyparse();
+        // Analyse
+        if (!yyparse()) {
 
-        // Exécution
-        if (!erreur_analyse) {
-
+            // Exécution
             int valeur_retour = execution(commande_lue);
             liberer(commande_lue);
             if (valeur_retour != 0 && option_e) {
                 fini = 1;
             }
-
-        } else {
-            verbose("Apparement il y a eu une erreur d'analyse");
-			snprintf(chaine_retour_erreur,1024,"Code de retour de yyparse() : %d",erreur_analyse);
-            debug(chaine_retour_erreur);
-            free(chaine_retour_erreur);
         }
     }
     return 0;

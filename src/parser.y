@@ -1,6 +1,7 @@
 %{
 	#include "commande.h"
 	#include <stdio.h>
+	#include <string.h>
 	commande* commande_lue;
 
 	extern int yylex();
@@ -63,14 +64,14 @@ P 	:
 
 CR 	:
 	  CS						{ $$ = new_commande_redir(); $$->commande = $1; $$->red = RED_RIEN; 	$$->fichier = NULL; }
-	| CS T_REDIR_INPUT T_MOT	{ $$ = new_commande_redir(); $$->commande = $1; $$->red = REDIR_INPUT; 	$$->fichier = $3; }
-	| CS T_REDIR_OUTPUT T_MOT	{ $$ = new_commande_redir(); $$->commande = $1; $$->red = REDIR_OUTPUT; $$->fichier = $3; }
-	| CS T_APPEND T_MOT			{ $$ = new_commande_redir(); $$->commande = $1; $$->red = APPEND; 		$$->fichier = $3; }
+	| CS T_REDIR_INPUT T_MOT	{ $$ = new_commande_redir(); $$->commande = $1; $$->red = REDIR_INPUT; 	$$->fichier = strdup($3); free($3); }
+	| CS T_REDIR_OUTPUT T_MOT	{ $$ = new_commande_redir(); $$->commande = $1; $$->red = REDIR_OUTPUT; $$->fichier = strdup($3); free($3); }
+	| CS T_APPEND T_MOT			{ $$ = new_commande_redir(); $$->commande = $1; $$->red = APPEND; 		$$->fichier = strdup($3); free($3); }
 	;
 
 CS:
-	  T_MOT		{ $$ = new_commande_simple(); cs_append($$,$1); }
-	| CS T_MOT	{ cs_append($1,$2); $$ = $1; }
+	  T_MOT		{ $$ = new_commande_simple(); cs_append($$,$1); free($1); }
+	| CS T_MOT	{ cs_append($1,$2); $$ = $1; free($2); }
 	;
 
 %%

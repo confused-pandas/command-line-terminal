@@ -11,18 +11,28 @@
 int execution(commande* c) {
 
     debug ("execution()");
-    return execution_and_or(c->liste);
-    /*
     switch(c->sep) {
         case SEMICOLUMN:
-            int res =
+            NULL;
+            int res = execution_and_or(c->liste);
             if (c->suivante == NULL) {
-                return 
+                return res;
             } else {
                 return execution(c->suivante);
             }
         case AMPERSAND:
-            //TODO : un truc;
+            NULL;
+            pid_t pid = fork();
+            if (pid == 0) {
+                exit(execution_and_or(c->liste));
+            } else {
+                printf("[%d]\n",pid);
+                if (c->suivante == NULL) {
+                    return 0;
+                } else {
+                    return execution(c->suivante);
+                }
+            }
         case SEP_RIEN:
             if (c->suivante != NULL) {
                 debug("Commande non nul après un séparateur nul !");
@@ -30,7 +40,6 @@ int execution(commande* c) {
             return execution_and_or(c->liste);
     }
     return -1;
-    */
 }
 
 int execution_and_or(liste_and_or* l) {
@@ -167,6 +176,11 @@ int execution_simple(commande_simple* c) {
     pid_t pid;
     int errexec;
 
+    /******************************
+    *        build-in 1 :         *
+    *                             *
+    *             cd              *
+    ******************************/
     if (strcmp(parsed[0],"cd")==0) {
         if (parsed[1] != NULL) {
             if (strcmp(parsed[1], "~") == 0) {
@@ -179,33 +193,70 @@ int execution_simple(commande_simple* c) {
         }
         return 0;
     }
+
+    /******************************
+    *        build-in 2 :         *
+    *                             *
+    *            exit             *
+    ******************************/
     if (strcmp(parsed[0],"exit")==0) {
         exit(0);
     }
-    else{
-        pid = fork();
-        if (pid < 0) {
-            fprintf(stderr, "Erreur dans %d\n", getpid());
-            perror("Erreur lors du fork");
-            return -1;
-        }else if (pid == 0) {
-            errexec = execvp(parsed[0], parsed);
-            if (errexec == -1) {
-                perror("Erreur lors de l'exécution");
-                exit(-1);
-            }
-        }else{ 
-            int status;
 
-            if ( waitpid(pid, &status, 0) == -1 ) {
+    /******************************
+    *        build-in 3 :         *
+    *                             *
+    *             fg              *
+    ******************************/
+    if (strcmp(parsed[0],"fg")==0) {
+        if(parsed[1] == NULL) {
+            int status;
+            int pid_retour = wait(&status);
+            if ( pid_retour == -1 ) {
+                perror("wait() failed");
+                exit(EXIT_FAILURE);
+            }
+            if ( WIFEXITED(status) ) {
+                int es = WEXITSTATUS(status);
+                printf("[%d->%d]\n",pid_retour,es);
+                return 0;
+            }
+        } else {
+            int status;
+            if ( waitpid(atoi(parsed[1]),&status,0) == -1 ) {
                 perror("waitpid() failed");
                 exit(EXIT_FAILURE);
             }
-
             if ( WIFEXITED(status) ) {
                 int es = WEXITSTATUS(status);
-                return es;
+                printf("[%d->%d]\n",atoi(parsed[1]),es);
+                return 0;
             }
+        }
+    }
+
+    pid = fork();
+    if (pid < 0) {
+        fprintf(stderr, "Erreur dans %d\n", getpid());
+        perror("Erreur lors du fork");
+        return -1;
+    }else if (pid == 0) {
+        errexec = execvp(parsed[0], parsed);
+        if (errexec == -1) {
+            perror("Erreur lors de l'exécution");
+            exit(-1);
+        }
+    }else{ 
+        int status;
+
+        if ( waitpid(pid, &status, 0) == -1 ) {
+            perror("waitpid() failed");
+            exit(EXIT_FAILURE);
+        }
+
+        if ( WIFEXITED(status) ) {
+            int es = WEXITSTATUS(status);
+            return es;
         }
     }
     return -1;

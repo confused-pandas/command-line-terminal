@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <dlfcn.h>
 
+#include "liberer.h"
 #include "lecture.h"
 #include "execution.h"
 #include "parser.h"
@@ -28,19 +29,10 @@ int ignore_wrong_path_argument = 1;
 
 int main(int argc, char **argv){
 
-    char* retour_readline = (char*)malloc(sizeof(char));
-    char* prompt = (char*)malloc(sizeof(char));
-
     char* (*readline)(char*);
     void  (*add_history)(char*);
     void* handle;
-
-	char* hostname = (char*) malloc(sizeof(char)*128);
-	char* pwd = (char*) malloc(sizeof(char)*1024);
     int fini = 0;
-
-    int erreur_analyse;
-	char* chaine_retour_erreur = (char*) malloc(sizeof(char));
 
 	if (argc > 1) {
 		int i;
@@ -81,14 +73,22 @@ int main(int argc, char **argv){
 
     while (!feof(stdin) && !fini) {
 
+        char* retour_readline = (char*)malloc(sizeof(char)*1024);
+        char* prompt = (char*)malloc(sizeof(char)*1024);
+
+        char* hostname = (char*) malloc(sizeof(char)*128);
+        char* pwd = (char*) malloc(sizeof(char)*1024);
+
+        int erreur_analyse;
+        char* chaine_retour_erreur = (char*) malloc(sizeof(char)*1024);
+
+
         debug("-- Tour de boucle main --");
     	//Affiche le prompt
         if(!option_no_prompt) {
         	gethostname(hostname, 128);
-        	hostname[127] = '\0';
         	getcwd(pwd, 1024);
-        	pwd[1023] = '\0';
-        	sprintf(prompt,"%s@%s:%s$ ",getenv("USER"),hostname,pwd);
+        	snprintf(prompt,1024,"%s@%s:%s$ ",getenv("USER"),hostname,pwd);
         }
 
         if (option_r) {
@@ -100,6 +100,7 @@ int main(int argc, char **argv){
         }
 
         yy_scan_string(retour_readline);
+        free(retour_readline);
 
         // Lecture & Analyse
         erreur_analyse = yyparse();
@@ -108,16 +109,17 @@ int main(int argc, char **argv){
         if (!erreur_analyse) {
 
             int valeur_retour = execution(commande_lue);
+            liberer(commande_lue);
             if (valeur_retour != 0 && option_e) {
                 fini = 1;
             }
 
         } else {
             verbose("Apparement il y a eu une erreur d'analyse");
-			sprintf(chaine_retour_erreur,"Code de retour de yyparse() : %d",erreur_analyse);
+			snprintf(chaine_retour_erreur,1024,"Code de retour de yyparse() : %d",erreur_analyse);
             debug(chaine_retour_erreur);
+            free(chaine_retour_erreur);
         }
     }
-    free(retour_readline);
     return 0;
 }

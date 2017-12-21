@@ -28,6 +28,7 @@ int execution(commande* c) {
                     exit(execution_and_or(c->liste));
                 } else {
                     printf("[%d]\n",pid);
+                    fflush(stdout);
                     if (c->suivante == NULL) {
                         return 0;
                     } else {
@@ -239,6 +240,7 @@ int execution_simple(commande_simple* c) {
             if ( WIFEXITED(status) ) {
                 int es = WEXITSTATUS(status);
                 printf("[%d->%d]\n",atoi(c->mots[1]),es);
+                fflush(stdout);
                 return 0;
             }
         }

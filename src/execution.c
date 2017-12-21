@@ -11,7 +11,7 @@
 int execution(commande* c) {
 
     debug ("execution()");
-    //TODO : CHANGER
+    //TODO : CHANGER CA
     return execution_and_or(c->liste);
 }
 

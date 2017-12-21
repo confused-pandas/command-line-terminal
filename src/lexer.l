@@ -7,6 +7,7 @@
 	/* ATTENTION A BIEN IMPORTER LES STRUCTURES AVANT LE PARSER */
 	#include "commande.h"
 	#include "parser.h"
+	#include "verbose.h"
 	#define SAVE_TEXT yylval.string = strdup(yytext)
 
 %}
@@ -29,7 +30,11 @@
 "||"					{ return T_OR; }
 ";"						{ return T_SEMICOLON; }
 "&"						{ return T_AMPERSAND; }
-.						{ printf("!! Symbole inconnu : %s\n",yytext);yyterminate(); }
+.						{
+							char* chaine_retour_erreur = (char*) malloc(sizeof(char));
+							sprintf(chaine_retour_erreur,"Symbole inconnu : %s = %d\n",yytext,(int) yytext[0]);
+            				debug(chaine_retour_erreur);
+						}
 
 %%
 	/* PARTIE ? */

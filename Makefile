@@ -1,8 +1,8 @@
 tesh : tmp out/is_file.o out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o bison flex
-	gcc out/is_file.o out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall -g -DDEBUG
+	gcc out/is_file.o out/verbose.o out/lecture.o out/execution.o out/main.o out/parser.o out/lexer.o out/commande.o -o tesh -Wall -g -DDEBUG -ldl
 
 out/main.o : out src/main.c
-	gcc -c src/main.c -o out/main.o -Wall
+	gcc -c src/main.c -o out/main.o -Wall -ldl
 
 out/execution.o : out src/execution.c
 	gcc -c src/execution.c -o out/execution.o -Wall

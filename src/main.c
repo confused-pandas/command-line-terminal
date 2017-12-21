@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <dlfcn.h>
 
 #include "lecture.h"
 #include "execution.h"
@@ -25,8 +26,15 @@ int ignore_wrong_path_argument = 1;
 
 int main(int argc, char **argv){
 
-	char hostname[128];
-	char pwd[1024];
+    char* ligne_lue = (char*) malloc(sizeof(char));
+    char* prompt = (char*) malloc(sizeof(char));
+
+    char* (*readline)(char*);
+    void  (*add_history)(char*);
+    void* handle;
+
+	char* hostname = (char*) malloc(sizeof(char)*128);
+	char* pwd = (char*) malloc(sizeof(char)*1024);
     int fini = 0;
 
     int erreur_analyse;
@@ -45,6 +53,13 @@ int main(int argc, char **argv){
                 option_e = 1;
             } else if (strcmp(argv[i],"-r") == 0) {
                 option_r = 1;
+                handle = dlopen("libreadline.so", RTLD_LAZY);
+                if (handle == NULL) {
+                    debug("Readline n'a pas reussi a charger");
+                    return -1;
+                }
+                readline = (char*(*)(char*)) dlsym(handle,"readline");
+                add_history = (void (*)(char*)) dlsym(handle,"add_history");
             } else if (is_file(argv[i])) {
                 freopen(argv[i], "r", stdin); 
             }
@@ -53,6 +68,11 @@ int main(int argc, char **argv){
 
     if(!isatty(0)) {
         option_no_prompt = 1;
+    }
+
+    if (option_no_prompt && option_r) {
+        debug("Je veux pas faire readline avec un script et puis quoi encore ?");
+        return -1;
     }
 
     while (!feof(stdin) && !fini) {
@@ -64,8 +84,21 @@ int main(int argc, char **argv){
         	hostname[127] = '\0';
         	getcwd(pwd, 1024);
         	pwd[1023] = '\0';
-        	printf("%s@%s:%s$ ",getenv("USER"),hostname,pwd);
+        	sprintf(prompt,"%s@%s:%s$ ",getenv("USER"),hostname,pwd);
         }
+
+        if (option_r) {
+            ligne_lue = readline(prompt);
+            add_history(ligne_lue);
+        } else {
+            printf("%s",prompt);
+            ligne_lue = lecture();
+        }
+
+        if (ligne_lue == NULL) {
+            continue;
+        }
+        yy_scan_string(ligne_lue);
 
         // Lecture & Analyse
         erreur_analyse = yyparse();

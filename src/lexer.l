@@ -30,11 +30,7 @@
 "||"					{ return T_OR; }
 ";"						{ return T_SEMICOLON; }
 "&"						{ return T_AMPERSAND; }
-.						{
-							char* chaine_retour_erreur = (char*) malloc(sizeof(char));
-							sprintf(chaine_retour_erreur,"Symbole inconnu : %s = %d\n",yytext,(int) yytext[0]);
-            				debug(chaine_retour_erreur);
-						}
+.						{ printf("Symbole inconnu : %s = %d\n",yytext,(int) yytext[0]); }
 
 %%
 	/* PARTIE ? */

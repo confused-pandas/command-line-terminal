@@ -826,18 +826,14 @@ YY_RULE_SETUP
 case 12:
 YY_RULE_SETUP
 #line 33 "src/lexer.l"
-{
-							char* chaine_retour_erreur = (char*) malloc(sizeof(char));
-							sprintf(chaine_retour_erreur,"Symbole inconnu : %s = %d\n",yytext,(int) yytext[0]);
-            				debug(chaine_retour_erreur);
-						}
+{ printf("Symbole inconnu : %s = %d\n",yytext,(int) yytext[0]); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 39 "src/lexer.l"
+#line 35 "src/lexer.l"
 ECHO;
 	YY_BREAK
-#line 841 "src/lexer.c"
+#line 837 "src/lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1799,7 +1795,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 39 "src/lexer.l"
+#line 35 "src/lexer.l"
 
 
 	/* PARTIE ? */

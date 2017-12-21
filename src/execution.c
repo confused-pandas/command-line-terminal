@@ -11,33 +11,35 @@
 int execution(commande* c) {
 
     debug ("execution()");
-    switch(c->sep) {
-        case SEMICOLUMN:
-            NULL;
-            int res = execution_and_or(c->liste);
-            if (c->suivante == NULL) {
-                return res;
-            } else {
-                return execution(c->suivante);
-            }
-        case AMPERSAND:
-            NULL;
-            pid_t pid = fork();
-            if (pid == 0) {
-                exit(execution_and_or(c->liste));
-            } else {
-                printf("[%d]\n",pid);
+    if (c != NULL) {
+        switch(c->sep) {
+            case SEMICOLUMN:
+                NULL;
+                int res = execution_and_or(c->liste);
                 if (c->suivante == NULL) {
-                    return 0;
+                    return res;
                 } else {
                     return execution(c->suivante);
                 }
-            }
-        case SEP_RIEN:
-            if (c->suivante != NULL) {
-                debug("Commande non nul après un séparateur nul !");
-            }
-            return execution_and_or(c->liste);
+            case AMPERSAND:
+                NULL;
+                pid_t pid = fork();
+                if (pid == 0) {
+                    exit(execution_and_or(c->liste));
+                } else {
+                    printf("[%d]\n",pid);
+                    if (c->suivante == NULL) {
+                        return 0;
+                    } else {
+                        return execution(c->suivante);
+                    }
+                }
+            case SEP_RIEN:
+                if (c->suivante != NULL) {
+                    debug("Commande non nul après un séparateur nul !");
+                }
+                return execution_and_or(c->liste);
+        }
     }
     return -1;
 }

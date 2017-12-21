@@ -38,7 +38,8 @@
 
 %%
 
-CP	: C	{ commande_lue = $1; }
+CP	: C			{ commande_lue = $1; }
+	| %empty 	{ commande_lue = NULL; }
 	;
 
 C 	:

@@ -99,10 +99,6 @@ int main(int argc, char **argv){
             retour_readline = lecture();
         }
 
-        if (retour_readline == NULL) {
-            continue;
-        }
-
         yy_scan_string(retour_readline);
 
         // Lecture & Analyse

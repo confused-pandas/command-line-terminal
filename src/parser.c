@@ -475,10 +475,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -6
+#define YYPACT_NINF -4
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-6)))
+  (!!((Yystate) == (-4)))
 
 #define YYTABLE_NINF -1
 
@@ -489,9 +489,9 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      10,    -6,     1,    -6,    -2,     3,     6,    -3,    -6,    10,
-      10,    10,    10,    10,    -6,    12,    13,    14,    -6,    -6,
-      -6,    -6,    -6,    -6,    -6,    -6
+       6,    -4,     1,    -4,    -2,    -4,     7,    -3,    -4,     6,
+       6,     6,     6,     6,    -4,    13,    14,    15,    -4,    -4,
+      -4,    -4,    -4,    -4,    -4,    -4
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -507,7 +507,7 @@ static const yytype_uint8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -6,    -6,    -5,     0,     5,    -6,    -6
+      -4,    -4,     4,    -4,    -1,    -4,    -4
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -521,14 +521,14 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      14,     8,     9,    10,    18,    19,    15,    16,    17,    11,
-      12,    20,    21,     1,    13,    23,    24,    25,    22
+      14,     8,     9,    10,    11,    12,    15,    16,    17,     1,
+      20,    21,    22,    18,    19,    13,    23,    24,    25
 };
 
 static const yytype_uint8 yycheck[] =
 {
-       3,     0,     4,     5,     9,    10,     9,    10,    11,     6,
-       7,    11,    12,     3,     8,     3,     3,     3,    13
+       3,     0,     4,     5,     6,     7,     9,    10,    11,     3,
+      11,    12,    13,     9,    10,     8,     3,     3,     3
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -537,7 +537,7 @@ static const yytype_uint8 yystos[] =
 {
        0,     3,    14,    15,    16,    17,    18,    19,     0,     4,
        5,     6,     7,     8,     3,     9,    10,    11,    15,    15,
-      16,    16,    17,     3,     3,     3
+      17,    17,    17,     3,     3,     3
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -1235,37 +1235,37 @@ yyreduce:
 
   case 3:
 #line 45 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[0].lst_and_or); (yyval.commande_complete)->sep = SEP_RIEN; (yyval.commande_complete)->suivante = NULL; }
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[0].lst_and_or); (yyval.commande_complete)->sep = SEP_RIEN; (yyval.commande_complete)->suivante = NULL; }
 #line 1240 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 46 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = SEMICOLUMN; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = SEMICOLUMN; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
 #line 1246 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 47 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->l = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = AMPERSAND; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = AMPERSAND; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
 #line 1252 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 51 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = OP_RIEN; (yyval.lst_and_or)->suivante = NULL; }
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->precedente = NULL; }
 #line 1258 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 52 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[-2].lst_pipe); (yyval.lst_and_or)->op = AND; (yyval.lst_and_or)->suivante = (yyvsp[0].lst_and_or); }
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = AND; (yyval.lst_and_or)->precedente = (yyvsp[-2].lst_and_or); }
 #line 1264 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 53 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[-2].lst_pipe); (yyval.lst_and_or)->op = OR; (yyval.lst_and_or)->suivante = (yyvsp[0].lst_and_or); }
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = OR; (yyval.lst_and_or)->precedente = (yyvsp[-2].lst_and_or); }
 #line 1270 "src/parser.c" /* yacc.c:1646  */
     break;
 

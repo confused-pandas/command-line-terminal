@@ -21,8 +21,8 @@
 <<EOF>>					{ yyterminate(); }
 [\n\0]					{ yyterminate(); }
 [a-zA-Z0-9\_\-\./!]+	{ SAVE_TEXT; return T_MOT; }
-">"						{ return T_REDIR_INPUT; }
-"<"						{ return T_REDIR_OUTPUT; }
+">"						{ return T_REDIR_OUTPUT; }
+"<"						{ return T_REDIR_INPUT; }
 ">>"					{ return T_APPEND; }
 "|"						{ return T_PIPE; }
 "&&"					{ return T_AND; }

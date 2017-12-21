@@ -58,7 +58,7 @@ int main(int argc, char **argv){
 
         //Exécution
         if (!erreur_analyse) {
-            execution(commande_lue,0);
+            execution(commande_lue);
         } else {
             verbose("Apparement il y a eu une erreur d'analyse");
 			sprintf(chaine_retour_erreur,"Code de retour de yyparse() : %d",erreur_analyse);

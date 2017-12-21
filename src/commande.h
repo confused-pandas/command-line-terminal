@@ -1,15 +1,15 @@
 #ifndef COMMANDE_H
 #define COMMANDE_H
 
-#include "string_vector.h"
-
-typedef struct commande_simple commande_simple;
+typedef struct string_vector commande_simple;
 typedef struct commande_redirigee commande_redirigee;
 typedef struct liste_pipe liste_pipe;
 typedef struct liste_and_or liste_and_or;
 typedef struct commande commande;
 
-void cs_append(commande_simple* commande_simple, char* mot);
+void cs_append(commande_simple* cs, char* mot);
+char** get_NULL_terminated_form(commande_simple* cs);
+
 commande_simple* new_commande_simple();
 commande_redirigee* new_commande_redir();
 liste_pipe* new_pipe();
@@ -26,7 +26,6 @@ typedef enum {
 typedef enum {
 	OR, /* || */
 	AND, /* && */
-	OP_RIEN, /* si c'est fini */
 } operateur;
 
 typedef enum {
@@ -37,8 +36,11 @@ typedef enum {
 
 // Sert à contenir une commande simple
 // tout en bas de la hiérarchie, directement executable par exec()
-struct commande_simple {
-	string_vector* commande; // contient par exemple ["ls",'-lR']
+struct string_vector {
+	char** mots;
+	int taille;
+	int taille_reelle;
+	int taille_realloc;
 };
 
 // Contient une commande redirigée
@@ -57,13 +59,13 @@ struct liste_pipe {
 
 // Sert à former des listes de listes pipés enchainées avec des && et des ||
 struct liste_and_or {
-	liste_pipe* liste;
+	liste_and_or* precedente;
 	operateur op;
-	liste_and_or* suivante;
+	liste_pipe* liste;
 };
 
 struct commande {
-	liste_and_or* l;
+	liste_and_or* liste;
 	separateur sep;
 	commande* suivante;
 };

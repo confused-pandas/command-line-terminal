@@ -42,15 +42,15 @@ CP	: C	{ commande_lue = $1; }
 	;
 
 C 	:
-	  AO				{ $$ = new_commande(); $$->l = $1; $$->sep = SEP_RIEN; $$->suivante = NULL; }
-	| AO T_SEMICOLON C	{ $$ = new_commande(); $$->l = $1; $$->sep = SEMICOLUMN; $$->suivante = $3; }
-	| AO T_AMPERSAND C 	{ $$ = new_commande(); $$->l = $1; $$->sep = AMPERSAND; $$->suivante = $3; }
+	  AO				{ $$ = new_commande(); $$->liste = $1; $$->sep = SEP_RIEN; $$->suivante = NULL; }
+	| AO T_SEMICOLON C	{ $$ = new_commande(); $$->liste = $1; $$->sep = SEMICOLUMN; $$->suivante = $3; }
+	| AO T_AMPERSAND C 	{ $$ = new_commande(); $$->liste = $1; $$->sep = AMPERSAND; $$->suivante = $3; }
 	;
 
 AO 	: 
-	  P				{ $$ = new_and_or(); $$->liste = $1; $$->op = OP_RIEN; $$->suivante = NULL; }
-	| P T_AND AO	{ $$ = new_and_or(); $$->liste = $1; $$->op = AND; $$->suivante = $3; }
-	| P T_OR AO 	{ $$ = new_and_or(); $$->liste = $1; $$->op = OR; $$->suivante = $3; }
+	  P				{ $$ = new_and_or(); $$->liste = $1; $$->precedente = NULL; }
+	| AO T_AND P	{ $$ = new_and_or(); $$->liste = $3; $$->op = AND; $$->precedente = $1; }
+	| AO T_OR P 	{ $$ = new_and_or(); $$->liste = $3; $$->op = OR; $$->precedente = $1; }
 	;
 
 P 	:

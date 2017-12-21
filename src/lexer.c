@@ -701,7 +701,6 @@ YY_DECL
 		}
 
 	{
-
 #line 17 "src/lexer.l"
 
 	/* PARTIE REGLES */
@@ -786,12 +785,12 @@ YY_RULE_SETUP
 case 4:
 YY_RULE_SETUP
 #line 24 "src/lexer.l"
-{ return T_REDIR_INPUT; }
+{ return T_REDIR_OUTPUT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 25 "src/lexer.l"
-{ return T_REDIR_OUTPUT; }
+{ return T_REDIR_INPUT; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
@@ -1794,6 +1793,7 @@ void yyfree (void * ptr )
 }
 
 #define YYTABLES_NAME "yytables"
+
 #line 34 "src/lexer.l"
 
 

@@ -1,6 +1,4 @@
-Séance de travail : 26/10/2017
-
-Tests à effectuer 
-- Affecter différents espaces à la mémoire (malloc) afin de vérifier si le realloc fonctionne bien
-(permet de vérifier si lorsque l'on rentre des commandes assez grande, le programme réalloue de l'espace avec REALLOC()
-
+echo a
+echo b
+false
+echo c

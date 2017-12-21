@@ -14,14 +14,14 @@ char* lecture() {
         exit(105); /* No buffer space available */
     }
     
-    do {
+    while(1) {
 
         //On lit un caractère
         char c = getchar();
 
-        //Si l'utilisateur a fini sa commande il appuye sur entrée
-        //Ce qui envoie un caractère \n
-        if (c == '\n' || c == EOF){
+        // Si l'utilisateur a fini sa commande il appuye sur entrée
+        // Ce qui envoie un caractère \n
+        if (c == '\n' || c == EOF || c == '\0') {
 
             //C'est donc le moment de fermer la chaine
             commande[position] = '\0';
@@ -50,6 +50,6 @@ char* lecture() {
 
         }
 
-    } while (1);
+    }
 
 }

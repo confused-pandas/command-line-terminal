@@ -400,7 +400,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  7
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  16
+#define YYNRULES  18
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  26
 
@@ -449,8 +449,8 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    41,    41,    45,    46,    47,    51,    52,    53,    57,
-      58,    62,    63,    64,    65,    69,    70
+       0,    41,    41,    45,    46,    47,    48,    49,    53,    54,
+      55,    59,    60,    64,    65,    66,    67,    71,    72
 };
 #endif
 
@@ -499,9 +499,9 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,    15,     0,     2,     3,     6,     9,    11,     1,     0,
-       0,     0,     0,     0,    16,     0,     0,     0,     4,     5,
-       7,     8,    10,    12,    13,    14
+       0,    17,     0,     2,     3,     8,    11,    13,     1,     4,
+       5,     0,     0,     0,    18,     0,     0,     0,     6,     7,
+       9,    10,    12,    14,    15,    16
 };
 
   /* YYPGOTO[NTERM-NUM].  */
@@ -543,15 +543,15 @@ static const yytype_uint8 yystos[] =
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    13,    14,    15,    15,    15,    16,    16,    16,    17,
-      17,    18,    18,    18,    18,    19,    19
+       0,    13,    14,    15,    15,    15,    15,    15,    16,    16,
+      16,    17,    17,    18,    18,    18,    18,    19,    19
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     1,     3,     3,     1,     3,     3,     1,
-       3,     1,     3,     3,     3,     1,     2
+       0,     2,     1,     1,     2,     2,     3,     3,     1,     3,
+       3,     1,     3,     1,     3,     3,     3,     1,     2
 };
 
 
@@ -1241,84 +1241,96 @@ yyreduce:
 
   case 4:
 #line 46 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = SEMICOLUMN; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[-1].lst_and_or); (yyval.commande_complete)->sep = SEMICOLUMN; (yyval.commande_complete)->suivante = NULL; }
 #line 1246 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 47 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = AMPERSAND; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[-1].lst_and_or); (yyval.commande_complete)->sep = AMPERSAND; (yyval.commande_complete)->suivante = NULL; }
 #line 1252 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 51 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->precedente = NULL; }
+#line 48 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = SEMICOLUMN; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
 #line 1258 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 52 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = AND; (yyval.lst_and_or)->precedente = (yyvsp[-2].lst_and_or); }
+#line 49 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.commande_complete) = new_commande(); (yyval.commande_complete)->liste = (yyvsp[-2].lst_and_or); (yyval.commande_complete)->sep = AMPERSAND; (yyval.commande_complete)->suivante = (yyvsp[0].commande_complete); }
 #line 1264 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 53 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = OR; (yyval.lst_and_or)->precedente = (yyvsp[-2].lst_and_or); }
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->precedente = NULL; }
 #line 1270 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 57 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[0].com_redir); (yyval.lst_pipe)->suivante = NULL; }
+#line 54 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = AND; (yyval.lst_and_or)->precedente = (yyvsp[-2].lst_and_or); }
 #line 1276 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 58 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[-2].com_redir); (yyval.lst_pipe)->suivante = (yyvsp[0].lst_pipe); }
+#line 55 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.lst_and_or) = new_and_or(); (yyval.lst_and_or)->liste = (yyvsp[0].lst_pipe); (yyval.lst_and_or)->op = OR; (yyval.lst_and_or)->precedente = (yyvsp[-2].lst_and_or); }
 #line 1282 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 62 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[0].com_simple); (yyval.com_redir)->red = RED_RIEN; (yyval.com_redir)->fichier = NULL; }
+#line 59 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[0].com_redir); (yyval.lst_pipe)->suivante = NULL; }
 #line 1288 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 63 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_INPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
+#line 60 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.lst_pipe) = new_pipe(); (yyval.lst_pipe)->commande = (yyvsp[-2].com_redir); (yyval.lst_pipe)->suivante = (yyvsp[0].lst_pipe); }
 #line 1294 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 64 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_OUTPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[0].com_simple); (yyval.com_redir)->red = RED_RIEN; (yyval.com_redir)->fichier = NULL; }
 #line 1300 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 65 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = APPEND; (yyval.com_redir)->fichier = (yyvsp[0].string); }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_INPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
 #line 1306 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 69 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.com_simple) = new_commande_simple(); cs_append((yyval.com_simple),(yyvsp[0].string)); }
+#line 66 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_OUTPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
 #line 1312 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 70 "src/parser.y" /* yacc.c:1646  */
-    { cs_append((yyvsp[-1].com_simple),(yyvsp[0].string)); (yyval.com_simple) = (yyvsp[-1].com_simple); }
+#line 67 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = APPEND; (yyval.com_redir)->fichier = (yyvsp[0].string); }
 #line 1318 "src/parser.c" /* yacc.c:1646  */
     break;
 
+  case 17:
+#line 71 "src/parser.y" /* yacc.c:1646  */
+    { (yyval.com_simple) = new_commande_simple(); cs_append((yyval.com_simple),(yyvsp[0].string)); }
+#line 1324 "src/parser.c" /* yacc.c:1646  */
+    break;
 
-#line 1322 "src/parser.c" /* yacc.c:1646  */
+  case 18:
+#line 72 "src/parser.y" /* yacc.c:1646  */
+    { cs_append((yyvsp[-1].com_simple),(yyvsp[0].string)); (yyval.com_simple) = (yyvsp[-1].com_simple); }
+#line 1330 "src/parser.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1334 "src/parser.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1546,5 +1558,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 73 "src/parser.y" /* yacc.c:1906  */
+#line 75 "src/parser.y" /* yacc.c:1906  */
 

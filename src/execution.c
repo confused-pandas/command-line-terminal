@@ -11,8 +11,26 @@
 int execution(commande* c) {
 
     debug ("execution()");
-    //TODO : CHANGER CA
     return execution_and_or(c->liste);
+    /*
+    switch(c->sep) {
+        case SEMICOLUMN:
+            int res =
+            if (c->suivante == NULL) {
+                return 
+            } else {
+                return execution(c->suivante);
+            }
+        case AMPERSAND:
+            //TODO : un truc;
+        case SEP_RIEN:
+            if (c->suivante != NULL) {
+                debug("Commande non nul après un séparateur nul !");
+            }
+            return execution_and_or(c->liste);
+    }
+    return -1;
+    */
 }
 
 int execution_and_or(liste_and_or* l) {
@@ -46,21 +64,28 @@ int execution_pipe(liste_pipe* l) {
 
     debug("execution_pipe()");
 
-    pid_t pid = fork();
-    if(pid == 0) {
-        exit(execution_pipe_(l, NULL));
+    if(l->suivante == NULL) {
+
+        int res = execution_redirigee(l->commande);
+        return res;
+
     } else {
-        int status;
-        if ( waitpid(pid, &status, 0) == -1 ) {
-            perror("waitpid() failed");
-            exit(EXIT_FAILURE);
-        }
-        if ( WIFEXITED(status) ) {
-            int es = WEXITSTATUS(status);
-            return es;
+
+        pid_t pid = fork();
+        if(pid == 0) {
+            exit(execution_pipe_(l, NULL));
+        } else {
+            int status;
+            if ( waitpid(pid, &status, 0) == -1 ) {
+                perror("waitpid() failed");
+                exit(EXIT_FAILURE);
+            }
+            if ( WIFEXITED(status) ) {
+                int es = WEXITSTATUS(status);
+                return es;
+            }
         }
     }
-
     return -1;
 
 }
@@ -101,7 +126,6 @@ int execution_pipe_(liste_pipe* l, int pipe_in[2]) {
         }
 
     }
-
     return -1;
 
 }
@@ -143,7 +167,7 @@ int execution_simple(commande_simple* c) {
     pid_t pid;
     int errexec;
 
-    if (strcmp(parsed[0],"cd")==0){
+    if (strcmp(parsed[0],"cd")==0) {
         if (parsed[1] != NULL) {
             if (strcmp(parsed[1], "~") == 0) {
                 chdir(getenv("HOME"));
@@ -154,6 +178,9 @@ int execution_simple(commande_simple* c) {
             chdir(getenv("HOME"));
         }
         return 0;
+    }
+    if (strcmp(parsed[0],"exit")==0) {
+        exit(0);
     }
     else{
         pid = fork();

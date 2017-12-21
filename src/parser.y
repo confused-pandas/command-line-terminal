@@ -43,6 +43,8 @@ CP	: C	{ commande_lue = $1; }
 
 C 	:
 	  AO				{ $$ = new_commande(); $$->liste = $1; $$->sep = SEP_RIEN; $$->suivante = NULL; }
+	| AO T_SEMICOLON	{ $$ = new_commande(); $$->liste = $1; $$->sep = SEMICOLUMN; $$->suivante = NULL; }
+	| AO T_AMPERSAND	{ $$ = new_commande(); $$->liste = $1; $$->sep = AMPERSAND; $$->suivante = NULL; }
 	| AO T_SEMICOLON C	{ $$ = new_commande(); $$->liste = $1; $$->sep = SEMICOLUMN; $$->suivante = $3; }
 	| AO T_AMPERSAND C 	{ $$ = new_commande(); $$->liste = $1; $$->sep = AMPERSAND; $$->suivante = $3; }
 	;

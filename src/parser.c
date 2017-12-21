@@ -1295,13 +1295,13 @@ yyreduce:
 
   case 13:
 #line 64 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[0].com_simple); (yyval.com_redir)->red = RED_RIEN; (yyval.com_redir)->fichier = NULL; }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[0].com_simple); (yyval.com_redir)->red = RED_RIEN; 	(yyval.com_redir)->fichier = NULL; }
 #line 1300 "src/parser.c" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 65 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_INPUT; (yyval.com_redir)->fichier = (yyvsp[0].string); }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = REDIR_INPUT; 	(yyval.com_redir)->fichier = (yyvsp[0].string); }
 #line 1306 "src/parser.c" /* yacc.c:1646  */
     break;
 
@@ -1313,7 +1313,7 @@ yyreduce:
 
   case 16:
 #line 67 "src/parser.y" /* yacc.c:1646  */
-    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = APPEND; (yyval.com_redir)->fichier = (yyvsp[0].string); }
+    { (yyval.com_redir) = new_commande_redir(); (yyval.com_redir)->commande = (yyvsp[-2].com_simple); (yyval.com_redir)->red = APPEND; 		(yyval.com_redir)->fichier = (yyvsp[0].string); }
 #line 1318 "src/parser.c" /* yacc.c:1646  */
     break;
 

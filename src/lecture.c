@@ -19,9 +19,9 @@ char* lecture() {
         //On lit un caractère
         char c = getchar();
 
-        //Si l'utilisateur a fini sa commande il appuye sur entrée
-        //Ce qui envoie un caractère \n
-        if (c == '\n' || c == EOF) {
+        // Si l'utilisateur a fini sa commande il appuye sur entrée
+        // Ce qui envoie un caractère \n
+        if (c == '\n' || c == EOF || c == '\0') {
 
             //C'est donc le moment de fermer la chaine
             commande[position] = '\0';

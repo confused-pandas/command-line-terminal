@@ -37,13 +37,13 @@ char** get_NULL_terminated_form(commande_simple* cs) {
 
 commande_simple* new_commande_simple() {
 
-	commande_simple* cs = (commande_simple*) malloc(sizeof(commande_simple));
+	commande_simple* cs = (commande_simple*) calloc(1,sizeof(commande_simple));
 	if (cs == NULL) {
 		printf("Erreur lors de l'allocation d'une commande simple");
 		exit(105); /* No buffer space available */
 	}
 
-	char** chaine_depart = (char**) malloc(sizeof(char*)*TAILLE_DEPART);
+	char** chaine_depart = (char**) calloc(TAILLE_DEPART,sizeof(char*));
 	if (chaine_depart == NULL) {
 		printf("Erreur lors de l'allocation du char** d'une commande simple\n");
 		exit(105);

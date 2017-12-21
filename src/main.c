@@ -18,6 +18,8 @@ int option_verbose;
 char* prefixe_verbose = "\t)) ";
 int option_debug;
 char* prefixe_debug = "\t]] ";
+int option_ultra;
+char* prefixe_ultra = "\tUU ";
 
 int option_e = 0;
 int option_r = 0;
@@ -26,8 +28,8 @@ int ignore_wrong_path_argument = 1;
 
 int main(int argc, char **argv){
 
-    char* ligne_lue = (char*) malloc(sizeof(char));
-    char* prompt = (char*) malloc(sizeof(char));
+    char* retour_readline = (char*)malloc(sizeof(char));
+    char* prompt = (char*)malloc(sizeof(char));
 
     char* (*readline)(char*);
     void  (*add_history)(char*);
@@ -47,7 +49,9 @@ int main(int argc, char **argv){
 				option_debug = 1;
 			} else if (strcmp(argv[i],"--verbose") == 0) {
 				option_verbose = 1;
-			} else if (strcmp(argv[i],"--no-prompt") == 0) {
+			} else if (strcmp(argv[i],"--ultra") == 0) {
+                option_ultra = 1;
+            } else if (strcmp(argv[i],"--no-prompt") == 0) {
                 option_no_prompt = 1;
             } else if (strcmp(argv[i],"-e") == 0) {
                 option_e = 1;
@@ -88,17 +92,18 @@ int main(int argc, char **argv){
         }
 
         if (option_r) {
-            ligne_lue = readline(prompt);
-            add_history(ligne_lue);
+            retour_readline = readline(prompt);
+            add_history(retour_readline);
         } else {
             printf("%s",prompt);
-            ligne_lue = lecture();
+            retour_readline = lecture();
         }
 
-        if (ligne_lue == NULL) {
+        if (retour_readline == NULL) {
             continue;
         }
-        yy_scan_string(ligne_lue);
+
+        yy_scan_string(retour_readline);
 
         // Lecture & Analyse
         erreur_analyse = yyparse();
@@ -117,5 +122,6 @@ int main(int argc, char **argv){
             debug(chaine_retour_erreur);
         }
     }
+    free(retour_readline);
     return 0;
 }

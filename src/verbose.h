@@ -2,6 +2,7 @@
 #define VERBOSE_H_
 
 void verbose(const char* message);
-void debug(const char* debug);
+void debug(const char* message);
+void ultra(const char* message);
 
 #endif

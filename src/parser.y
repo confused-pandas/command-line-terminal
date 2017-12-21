@@ -61,10 +61,10 @@ P 	:
 	;
 
 CR 	:
-	  CS						{ $$ = new_commande_redir(); $$->commande = $1; $$->red = RED_RIEN; $$->fichier = NULL; }
-	| CS T_REDIR_INPUT T_MOT	{ $$ = new_commande_redir(); $$->commande = $1; $$->red = REDIR_INPUT; $$->fichier = $3; }
+	  CS						{ $$ = new_commande_redir(); $$->commande = $1; $$->red = RED_RIEN; 	$$->fichier = NULL; }
+	| CS T_REDIR_INPUT T_MOT	{ $$ = new_commande_redir(); $$->commande = $1; $$->red = REDIR_INPUT; 	$$->fichier = $3; }
 	| CS T_REDIR_OUTPUT T_MOT	{ $$ = new_commande_redir(); $$->commande = $1; $$->red = REDIR_OUTPUT; $$->fichier = $3; }
-	| CS T_APPEND T_MOT			{ $$ = new_commande_redir(); $$->commande = $1; $$->red = APPEND; $$->fichier = $3; }
+	| CS T_APPEND T_MOT			{ $$ = new_commande_redir(); $$->commande = $1; $$->red = APPEND; 		$$->fichier = $3; }
 	;
 
 CS:

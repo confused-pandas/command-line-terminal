@@ -170,8 +170,6 @@ int execution_redirigee(commande_redirigee* c) {
 int execution_simple(commande_simple* c) {
 
     debug("execution_simple()");
-    
-    char** parsed = c->mots;
 
     pid_t pid;
     int errexec;
@@ -181,14 +179,19 @@ int execution_simple(commande_simple* c) {
     *                             *
     *             cd              *
     ******************************/
-    if (strcmp(parsed[0],"cd")==0) {
-        if (parsed[1] != NULL) {
-            if (strcmp(parsed[1], "~") == 0) {
+    if (strcmp(c->mots[0],"cd")==0) {
+        ultra("build-in : cd");
+        if (c->mots[1] != NULL) {
+            if (strcmp(c->mots[1], "~") == 0) {
+                ultra("build-in : cd ~ spécifié");
                 chdir(getenv("HOME"));
             } else {
-                chdir(parsed[1]);
+                ultra("build-in : cd path spécifié");
+                ultra(c->mots[1]);
+                chdir(c->mots[1]);
             }
         } else {
+            ultra("build-in : cd sans path");
             chdir(getenv("HOME"));
         }
         return 0;
@@ -199,7 +202,8 @@ int execution_simple(commande_simple* c) {
     *                             *
     *            exit             *
     ******************************/
-    if (strcmp(parsed[0],"exit")==0) {
+    if (strcmp(c->mots[0],"exit")==0) {
+        ultra("build-in : exit");
         exit(0);
     }
 
@@ -208,8 +212,10 @@ int execution_simple(commande_simple* c) {
     *                             *
     *             fg              *
     ******************************/
-    if (strcmp(parsed[0],"fg")==0) {
-        if(parsed[1] == NULL) {
+    if (strcmp(c->mots[0],"fg")==0) {
+        ultra("build-in : fg");
+        if(c->mots[1] == NULL) {
+            ultra("build-in : fg sans pid");
             int status;
             int pid_retour = wait(&status);
             if ( pid_retour == -1 ) {
@@ -222,14 +228,15 @@ int execution_simple(commande_simple* c) {
                 return 0;
             }
         } else {
+            ultra("build-in : fg avec pid");
             int status;
-            if ( waitpid(atoi(parsed[1]),&status,0) == -1 ) {
+            if ( waitpid(atoi(c->mots[1]),&status,0) == -1 ) {
                 perror("waitpid() failed");
                 exit(EXIT_FAILURE);
             }
             if ( WIFEXITED(status) ) {
                 int es = WEXITSTATUS(status);
-                printf("[%d->%d]\n",atoi(parsed[1]),es);
+                printf("[%d->%d]\n",atoi(c->mots[1]),es);
                 return 0;
             }
         }
@@ -241,7 +248,12 @@ int execution_simple(commande_simple* c) {
         perror("Erreur lors du fork");
         return -1;
     }else if (pid == 0) {
-        errexec = execvp(parsed[0], parsed);
+        ultra("execution de");
+        int i;
+        for(i=0;c->mots[i]!=NULL;i++) {
+            ultra(c->mots[i]);
+        }
+        errexec = execvp(c->mots[0], c->mots);
         if (errexec == -1) {
             perror("Erreur lors de l'exécution");
             exit(-1);

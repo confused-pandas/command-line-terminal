@@ -102,7 +102,7 @@ int main(int argc, char* argv[]){
         free(retour_readline);
 
         // Analyse
-        if (!yyparse()) {
+        if (!yyparse() && commande_lue != NULL) {
 
             // Exécution
             int valeur_retour = execution(commande_lue);

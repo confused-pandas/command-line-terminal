@@ -37,7 +37,7 @@ void liberer_cr(commande_redirigee* cr) {
 void liberer_cs(commande_simple* cs) {
 	
 	int i;
-	for(i=0; cs->mots[i]!=NULL; i++) {
+	for(i=0;i<cs->taille_reelle;i++) {
 		free(cs->mots[i]);
 	}
 	free(cs->mots);

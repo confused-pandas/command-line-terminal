@@ -26,7 +26,17 @@ void cs_append(commande_simple* cs, char* mot) {
 }
 
 char** get_NULL_terminated_form(commande_simple* cs) {
-	char** res = (char**) malloc(sizeof(char*)*(cs->taille+1));
+	
+	char** res;
+	char** tmp = (char**) malloc(sizeof(char*)*(cs->taille+1));
+	if (tmp != NULL) {
+		res = tmp;
+	} else  {
+		printf("Erreur lors de l'allocation du char** dans get_NULL_terminated_form()");
+		free(tmp);
+		exit(-1);
+	}
+
 	int i;
 	for(i=0; i<cs->taille; i++) {
 		res[i] = strdup(cs->mots[i]);
@@ -37,17 +47,26 @@ char** get_NULL_terminated_form(commande_simple* cs) {
 
 commande_simple* new_commande_simple() {
 
-	commande_simple* cs = (commande_simple*) calloc(1,sizeof(commande_simple));
-	if (cs == NULL) {
+	commande_simple* cs;
+	commande_simple* tmp = (commande_simple*) calloc(1,sizeof(commande_simple));
+	if (tmp == NULL) {
 		printf("Erreur lors de l'allocation d'une commande simple");
-		exit(105); /* No buffer space available */
+		free(tmp);
+		exit(-1);
+	} else {
+		cs = tmp;
 	}
 
-	char** chaine_depart = (char**) calloc(TAILLE_DEPART,sizeof(char*));
-	if (chaine_depart == NULL) {
+	char** chaine_depart;
+	char** tmp_ = (char**) calloc(TAILLE_DEPART,sizeof(char*));
+	if (tmp_ == NULL) {
 		printf("Erreur lors de l'allocation du char** d'une commande simple\n");
-		exit(105);
+		free(tmp_);
+		exit(-1);
+	} else {
+		chaine_depart = tmp_;
 	}
+
 
 	cs->mots = chaine_depart;
 
